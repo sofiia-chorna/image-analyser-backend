@@ -1,0 +1,20 @@
+{
+  "name": "image-analyzer",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:neo4j": "node ./neo4j/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "neo4j"
+  ],
+  "author": "Sofiia Chorna",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "16.0.3",
+    "neo4j-driver": "5.7.0"
+  }
+}
