@@ -1,0 +1,13 @@
+{
+  "name": "image-analyser",
+  "description": "",
+  "version": "1.0.0",
+  "scripts": {
+    "install:shared": "cd shared && npm install",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "install:all": "npm install && npm run install:shared && npm run install:client && npm run install:server"
+  },
+  "author": "Sofiia Chorna",
+  "license": "ISC"
+}

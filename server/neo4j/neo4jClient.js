@@ -1,8 +1,5 @@
 import neo4j from 'neo4j-driver';
-import * as dotenv from 'dotenv';
-
-// Configure reading from .env
-dotenv.config();
+import { ENV } from '../common/enums.js';
 
 // TODO debug mode to log response details
 class Neo4jClient {
@@ -12,23 +9,28 @@ class Neo4jClient {
          * @constant
          * @type {import('neo4j-driver').auth}
          */
-        this.auth = neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD);
+        this.auth = neo4j.auth.basic(ENV.NEO4J.USER, ENV.NEO4J.PASSWORD);
 
         /**
          * @private
          * @constant
          * @type {string}
          */
-        this.URI = process.env.NEO4J_URI;
+        this.URI = ENV.NEO4J.URI;
+
+        /**
+         * @private
+         * @type {import('neo4j-driver').Driver}
+         */
+        this.driver = null;
     };
 
+    /**
+     * @return {!Promise<void>}
+     */
     async init() {
         try {
-            /**
-             * @private
-             * @constant
-             * @type {import('neo4j-driver').Driver}
-             */
+            // Init neo4j driver
             this.driver = neo4j.driver(this.URI, this.auth);
 
             // Verify connection
@@ -40,6 +42,9 @@ class Neo4jClient {
         }
     }
 
+    /**
+     * @return {!Promise<void>}
+     */
     async testConnection() {
         const serverInfo = await this.driver.verifyConnectivity();
         console.log(`Connection established: ${JSON.stringify(serverInfo)}`);
@@ -54,10 +59,10 @@ class Neo4jClient {
 
     /**
      * @param {string} readQuery
-     * @param {Object} variables
+     * @param {Object=} variables
      * @return {Array<!Object>}
      */
-    async read(readQuery, variables) {
+    async read(readQuery, variables = {}) {
         // Get current session
         const session = this.getSession();
 
@@ -84,10 +89,10 @@ class Neo4jClient {
 
     /**
      * @param {string} writeQuery
-     * @param {Object} variables
+     * @param {Object=} variables
      * @return {Array<!Object>}
      */
-    async write(writeQuery, variables) {
+    async write(writeQuery, variables = {}) {
         // Get current session
         const session = this.getSession();
 
@@ -111,6 +116,9 @@ class Neo4jClient {
         }
     }
 
+    /**
+     * @return {!Promise<void>}
+     */
     async close() {
         await this.driver.close();
     }
