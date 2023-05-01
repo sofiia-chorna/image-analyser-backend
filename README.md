@@ -3,7 +3,7 @@
 Server:
 - Neo4j module (WIP)
 - Elastic Search module (to be reused)
-- API (TODO)
+- API (WIP)
 
 Client:
 - API (TODO)
