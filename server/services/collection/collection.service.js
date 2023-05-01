@@ -22,7 +22,7 @@ export class Collection {
    * @return {!Array<!Object>}
    */
   getAll(filter) {
-    return this._collectionRepository.getRecipes(filter);
+    return this._collectionRepository.getCollections(filter);
   }
 
   /**
@@ -30,7 +30,7 @@ export class Collection {
    * @return {Object}
    */
   getById(id) {
-    return this._collectionRepository.getRecipeById(id);
+    return this._collectionRepository.getCollectionById(id);
   }
 
   /**
@@ -38,16 +38,18 @@ export class Collection {
    * @return {Object}
    */
   async insert(collection) {
-    const { id } = await this._collectionRepository.createRecipe(collection);
+    const { id } = await this._collectionRepository.insertCollection(collection);
     // TODO insert to elastic search
     return this.getById(id);
   }
 
-  async update(id, recipe) {
-    await this._recipeContentRepository.createRecipeContent({
-      ...recipe,
-      recipeId: id
-    });
+  /**
+   * @param {string} id
+   * @param {!Object} collection
+   * @return {Object}
+   */
+  async update(id, collection) {
+    await this._collectionRepository.updateCollection(collection);
     // TODO update to elastic search
     return this.getById(id);
   }

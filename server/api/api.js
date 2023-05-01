@@ -1,7 +1,6 @@
 import { ApiPath } from '../common/common.js';
 import { initCollection } from './collection/collection.api.js';
 
-// export function initApi(fastify, { services: { collection }}, done) {
 export function initApi(fastify, options, done) {
   // Retrieve services
   const { services: { collection } } = options;
