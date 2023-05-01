@@ -1,9 +1,18 @@
 import neo4j from 'neo4j-driver';
-import { ENV } from '../common/enums.js';
+import { ENV } from '../common/common.js';
 
 // TODO debug mode to log response details
-class Neo4jClient {
+class Neo4j {
+    /**
+     * @return {Neo4j}
+     */
     constructor() {
+        /**
+         * @private
+         * @type {import('neo4j-driver').Driver}
+         */
+        this.driver = null;
+
         /**
          * @private
          * @constant
@@ -17,12 +26,6 @@ class Neo4jClient {
          * @type {string}
          */
         this.URI = ENV.NEO4J.URI;
-
-        /**
-         * @private
-         * @type {import('neo4j-driver').Driver}
-         */
-        this.driver = null;
     };
 
     /**
@@ -125,5 +128,4 @@ class Neo4jClient {
 }
 
 // Singleton instance
-export const neo4jClient = new Neo4jClient();
-await neo4jClient.init();
+export const neo4jClient = new Neo4j();

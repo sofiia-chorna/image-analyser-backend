@@ -1,4 +1,4 @@
-import { neo4jClient } from './neo4jClient.js';
+import { neo4jClient } from './neo4j.js';
 
 async function test() {
     try {

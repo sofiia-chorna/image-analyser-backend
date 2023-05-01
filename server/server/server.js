@@ -1,11 +1,12 @@
 import fastify from 'fastify';
 import cors from 'fastify-cors';
-import { ENV, ExitCode } from '../common/enums.js';
+import { ENV, ExitCode } from '../common/common.js';
 import { initApi } from '../api/api.js';
+import { collection } from '../services/services.js';
 
-class ServerClient {
+class Server {
     /**
-     * @return {ServerClient}
+     * @return {Server}
      */
     constructor() {
         /**
@@ -16,17 +17,22 @@ class ServerClient {
 
         /**
          * @private
-         * @type {!Map<string, !Object>}
+         * @constant
+         * @type {number}
          */
-        this.routes = new Map();
+        this.PORT = ENV.APP.PORT ?? 80;
 
-        // Init the server
-        this.init();
+        /**
+         * @private
+         * @constant
+         * @type {string}
+         */
+        this.HOST = ENV.APP.HOST ?? '0.0.0.0';
     }
 
     /**
      * Init the fastify server logic
-     * @private
+     * @return {!Promise<void>}
      */
     async init() {
         // Close previous connection if any
@@ -78,8 +84,9 @@ class ServerClient {
      */
     registerRoutes() {
         this.server.register(initApi, {
-            // TODO add services once created
-            services: {},
+            services: {
+                collection: collection,
+            },
             prefix: ENV.APP.API_PATH
         });
     }
@@ -90,28 +97,18 @@ class ServerClient {
      */
     async startServer() {
         try {
-            // Get port and host as environmental variables or use the default one
-            const port = ENV.APP.PORT ?? 80;
-            const host = ENV.APP.HOST ?? '0.0.0.0';
-
             // Start the server
             console.info('Try starting the server');
-            await this.server.listen(port, host);
-            console.info(`Listening on ${host}:${port}`);
+            await this.server.listen(this.PORT, this.HOST);
+            console.info(`Listening on ${this.HOST}:${this.PORT}`);
         }
         // Connection error
-        catch (err) {
-            this.server.log.error(err);
+        catch (error) {
+            this.server.log.error(error);
             process.exit(ExitCode.ERROR);
         }
     }
 }
 
-// Export as a singleton function
-let instance = null;
-export default () => {
-    if (instance === null) {
-        instance = new ServerClient();
-    }
-    return instance;
-}
+// Singleton instance
+export const serverClient = new Server();
