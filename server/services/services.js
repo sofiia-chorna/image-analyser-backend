@@ -2,7 +2,7 @@ import { collection as collectionRepository } from '../data/repositories/reposit
 import { Collection } from './collection/collection.service.js';
 
 const collection = new Collection({
-    repository: collectionRepository
+    collectionRepository: collectionRepository
 });
 
 export { collection };

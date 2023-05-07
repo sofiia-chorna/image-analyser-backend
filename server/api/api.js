@@ -6,13 +6,15 @@ export function initApi(fastify, options, done) {
   const { services: { collection } } = options;
 
   // Validate scheme of data
-  fastify.setValidatorCompiler(({ schema }) => {
-    return data => schema.validate(data);
-  });
+  // fastify.setValidatorCompiler(({ schema }) => {
+  //   return data => schema.validate(data);
+  // });
 
   // Register collection path & service
   fastify.register(initCollection, {
-    services: { collection },
+    services: {
+      collection: collection,
+    },
     prefix: ApiPath.COLLECTIONS
   });
 

@@ -1,5 +1,5 @@
 /*
-  Exist statuses
+  @enum Exist statuses
 */
 export const ExitCode = {
   ERROR: 1,

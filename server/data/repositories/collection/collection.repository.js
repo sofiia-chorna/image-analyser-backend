@@ -10,21 +10,19 @@ export class Collection extends Abstract {
 
   /**
    * @private
-   * @return {!Array<!Object>}
+   * @return {Promise<!Array<!Object>>}
    */
-  getCollections() {
-    // TODO
-    return [];
+  async getCollections() {
+    return await this.getAll();
   }
 
   /**
    * @private
    * @param {string} id
-   * @return {Object}
+   * @return {Promise<Object>}
    */
-  getCollectionById(id) {
-    // TODO
-    return null;
+  async getCollectionById(id) {
+    return await this.getById(id);
   }
 
   /**
@@ -33,8 +31,7 @@ export class Collection extends Abstract {
    * @return {Object}
    */
   async insertCollection(collection) {
-    // TODO
-    return null;
+    return await this.create(collection);
   }
 
   /**
@@ -45,5 +42,14 @@ export class Collection extends Abstract {
   async updateCollection(collection) {
     // TODO
     return null;
+  }
+
+  /**
+   * @private
+   * @param {string} id
+   * @return {Promise<Object>}
+   */
+  async deleteCollection(id) {
+    return await this.deleteById(id);
   }
 }

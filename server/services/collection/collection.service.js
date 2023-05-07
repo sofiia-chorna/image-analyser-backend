@@ -38,9 +38,9 @@ export class Collection {
    * @return {Object}
    */
   async insert(collection) {
-    const { id } = await this._collectionRepository.insertCollection(collection);
+    return await this._collectionRepository.insertCollection(collection);
     // TODO insert to elastic search
-    return this.getById(id);
+    // return this.getById(id);
   }
 
   /**
@@ -52,6 +52,14 @@ export class Collection {
     await this._collectionRepository.updateCollection(collection);
     // TODO update to elastic search
     return this.getById(id);
+  }
+
+  /**
+   * @param {string} id
+   * @return {Object}
+   */
+  async delete(id) {
+    return this._collectionRepository.deleteCollection(id);
   }
 
   // TODO Elastic Search method

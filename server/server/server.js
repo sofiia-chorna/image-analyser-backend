@@ -1,5 +1,5 @@
 import fastify from 'fastify';
-import cors from 'fastify-cors';
+import cors from '@fastify/cors';
 import { ENV, ExitCode } from '../common/common.js';
 import { initApi } from '../api/api.js';
 import { collection } from '../services/services.js';
@@ -68,9 +68,14 @@ class Server {
         // TODO add comments
         this.server = fastify({
             logger: {
-                prettyPrint: {
-                    ignore: 'pid,hostname'
-                }
+                transport: {
+                    target: 'pino-pretty',
+                    options: {
+                        colorize: false,
+                        singleLine: true,
+                        ignore: 'pid,req.hostname,req.remotePort'
+                    }
+                },
             }
         });
         this.server.addContentTypeParser('*', {'parseAs': 'buffer'}, (_request, body, done) => {
@@ -99,10 +104,9 @@ class Server {
         try {
             // Start the server
             console.info('Try starting the server');
-            await this.server.listen(this.PORT, this.HOST);
-            console.info(`Listening on ${this.HOST}:${this.PORT}`);
+            await this.server.listen({ port: this.PORT, address: this.HOST });
         }
-        // Connection error
+            // Connection error
         catch (error) {
             this.server.log.error(error);
             process.exit(ExitCode.ERROR);

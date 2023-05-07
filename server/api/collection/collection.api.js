@@ -8,31 +8,43 @@ const initCollection = (fastify, opts, done) => {
   fastify.route({
     method: HttpMethod.GET,
     url: CollectionsApiPath.ROOT,
-    [ControllerHook.HANDLER]: async req => {
-      const { rows } = await collectionService.getAll(req.query);
-      return rows;
-    }
+    [ControllerHook.HANDLER]: async (request) => {
+      return await collectionService.getAll(request.query);
+    },
+    [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
+      return { data: payload, size: payload.length };
+    },
   });
   fastify.route({
     method: HttpMethod.GET,
     url: CollectionsApiPath.$ID,
-    [ControllerHook.HANDLER]: async req => {
-      return await collectionService.getById(req.params.id);
+    [ControllerHook.HANDLER]: async (request) => {
+      return await collectionService.getById(request.params.id);
     }
   });
   fastify.route({
     method: HttpMethod.POST,
     url: CollectionsApiPath.ROOT,
-    [ControllerHook.HANDLER]: async req => {
-      return await collectionService.insert(req.body);
+    [ControllerHook.HANDLER]: async (request) => {
+      return await collectionService.insert(request.body);
     }
   });
   fastify.route({
     method: HttpMethod.PUT,
     url: CollectionsApiPath.$ID,
-    [ControllerHook.HANDLER]: async req => {
-      return await collectionService.update(req.params.id, req.body);
+    [ControllerHook.HANDLER]: async (request) => {
+      return await collectionService.update(request.params.id, request.body);
     }
+  });
+  fastify.route({
+    method: HttpMethod.DELETE,
+    url: CollectionsApiPath.$ID,
+    [ControllerHook.HANDLER]: async (request) => {
+      return await collectionService.delete(request.params.id);
+    },
+    [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
+      return { success: payload !== null };
+    },
   });
 
   done();

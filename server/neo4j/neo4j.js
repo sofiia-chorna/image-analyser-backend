@@ -1,12 +1,13 @@
 import neo4j from 'neo4j-driver';
 import { ENV } from '../common/common.js';
+import { getDateLog } from '../helpers/helpers.js';
 
-// TODO debug mode to log response details
 class Neo4j {
     /**
+     * @param {{debug: boolean}=} params
      * @return {Neo4j}
      */
-    constructor() {
+    constructor(params= {}) {
         /**
          * @private
          * @type {import('neo4j-driver').Driver}
@@ -26,6 +27,13 @@ class Neo4j {
          * @type {string}
          */
         this.URI = ENV.NEO4J.URI;
+
+        /**
+         * @private
+         * @constant
+         * @type {boolean}
+         */
+        this.debug = !!params.debug;
     };
 
     /**
@@ -72,13 +80,18 @@ class Neo4j {
         // Execute read transaction
         try {
             // Replace query parameters with variables
-            const { records } = await session.executeRead(tx =>
+            const { summary, records } = await session.executeRead(tx =>
                 tx.run(readQuery, variables)
             );
 
-            // TODO factorize to class to expose record methods
-            // Convert record to json
-            return records.map(record => record.toObject());
+            // Log query
+            if (this.debug) {
+                const date = getDateLog();
+                console.log(`[${date}] cypher query: ${JSON.stringify(summary.query, null, 4)}`);
+            }
+
+            // Convert result to meaningful objects
+            return this.formatRecords(records);
         }
         // Error while executing transaction
         catch (error) {
@@ -102,12 +115,18 @@ class Neo4j {
         // Execute write transaction
         try {
             // Replace query parameters with variables
-            const { records } = await session.executeWrite(tx =>
+            const { summary, records } = await session.executeWrite(tx =>
                 tx.run(writeQuery, variables)
             );
 
-            // Convert result to objects
-            return records.flatMap(record => record.map(node => node.properties));
+            // Log query
+            if (this.debug) {
+                const date = getDateLog();
+                console.log(`[${date}] cypher query: ${JSON.stringify(summary.query, null, 4)}`);
+            }
+
+            // Convert result to meaningful objects
+            return this.formatRecords(records);
         }
         // Error while executing transaction
         catch (error) {
@@ -125,7 +144,26 @@ class Neo4j {
     async close() {
         await this.driver.close();
     }
+
+    // TODO factorize to class to expose record methods
+    /**
+     * @param {!Array<!Object>} records
+     * @return {!Array<!Object>}
+     */
+    formatRecords(records) {
+        // Eliminate nested arrays
+        return records.flatMap(record => {
+            // Convert records to json
+            return record.map(node => {
+                // Get meaningfull properties
+                return {
+                    ...node.properties,
+                    id: node.identity.toString(),
+                };
+            });
+        });
+    }
 }
 
 // Singleton instance
-export const neo4jClient = new Neo4j();
+export const neo4jClient = new Neo4j({ debug: true });

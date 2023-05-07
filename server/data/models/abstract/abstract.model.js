@@ -1,7 +1,27 @@
 export class Abstract {
+  /**
+   * @param {string} label
+   * @return {Abstract}
+   */
+  constructor(label) {
+    /**
+     * @protected
+     * @type {string}
+     */
+    this.label = label;
+  }
+
+  /**
+   * @export
+   * @abstract
+   * @return {string}
+   */
+  getLabel() {
+    return this.label;
+  }
+
   static get jsonSchema() {
     return {
-      type: 'object',
       properties: {
         id: { type: 'string' },
         createdAt: { type: 'string' },
@@ -13,9 +33,9 @@ export class Abstract {
   /*
    * TODO
   $beforeInsert() {
-    const date = new Date().toISOString();
-    this.createdAt = date;
-    this.updatedAt = date;
+    const log = new Date().toISOString();
+    this.createdAt = log;
+    this.updatedAt = log;
   }
    */
 

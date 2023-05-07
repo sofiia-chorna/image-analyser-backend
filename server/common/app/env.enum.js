@@ -7,7 +7,7 @@ dotenv.config();
 const { APP_PORT, APP_HOST, NEO4J_USER, NEO4J_PASSWORD, NEO4J_URI } = process.env;
 
 /*
-  Environment variables
+  @enum Environment variables
  */
 export const ENV = {
   APP: {

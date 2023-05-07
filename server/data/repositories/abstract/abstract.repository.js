@@ -1,38 +1,62 @@
+import { neo4jClient } from '../../../neo4j/neo4j.js';
+
 export class Abstract {
   /**
+   * @param {Class} model
    * @return {Abstract}
    */
   constructor(model) {
-    this.model = model;
+    /**
+     * @protected
+     * @type {*}
+     */
+    this.model = new model();
+
+    /**
+     * @protected
+     * @type {Neo4j}
+     */
+    this.neo4j = neo4jClient;
+  }
+
+  /**
+   * @return {string}
+   */
+  getLabel() {
+    return this.model.getLabel();
   }
 
   /**
    * @private
-   * @return {!Array<!Object>}
+   * @return {Promise<!Array<!Object>>}
    */
-  getAll() {
-    // TODO
-    return [];
+  async getAll() {
+    const label = this.getLabel();
+    const query = `MATCH (n:${label}) RETURN n`;
+    return await this.neo4j.read(query);
   }
 
   /**
    * @private
    * @param {string} id
-   * @return {Object}
+   * @return {Promise<Object>}
    */
-  getById(id) {
-    // TODO
-    return null;
+  async getById(id) {
+    const label = this.getLabel();
+    const query = `MATCH (n:${label}) WHERE id(n) = $id RETURN n`;
+    const records = await this.neo4j.read(query, { id: Number(id) });
+    return records[0] ?? null;
   }
 
   /**
    * @private
    * @param {!Object} data
-   * @return {Object}
+   * @return {Promise<Object>}
    */
-  create(data) {
-    // TODO
-    return null;
+  async create(data) {
+    const label = this.getLabel();
+    const query = `CREATE (n:${label}) RETURN n`;
+    return await this.neo4j.write(query);
   }
 
   /**
@@ -42,7 +66,6 @@ export class Abstract {
    * @return {Object}
    */
   updateById(id, data) {
-    // TODO
     return null;
   }
 
@@ -51,8 +74,10 @@ export class Abstract {
    * @param {string} id
    * @return {Object}
    */
-  deleteById(id) {
-    // TODO
-    return null;
+  async deleteById(id) {
+    const label = this.getLabel();
+    const query = `MATCH (n:${label}) WHERE id(n) = $id DELETE n RETURN n`;
+    const records = await this.neo4j.write(query, { id: Number(id) });
+    return records[0] ?? null;
   }
 }
