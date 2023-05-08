@@ -3,5 +3,6 @@
 */
 export const DATA_TYPE = {
     COLLECTION: 'Collection',
-    USER: 'User'
+    USER: 'User',
+    ANALYSE: 'Analyse'
 };

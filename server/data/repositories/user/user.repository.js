@@ -1,5 +1,5 @@
 import { Abstract } from '../abstract/abstract.repository.js';
-import { User as UserModel } from '../../models/user/user.model.js';
+import { User as UserModel } from '../../models/models.js';
 
 export class User extends Abstract {
   /**

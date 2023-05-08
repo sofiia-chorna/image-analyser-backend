@@ -1,5 +1,5 @@
 import { Abstract } from '../abstract/abstract.repository.js';
-import { Collection as CollectionModel } from '../../models/collection/collection.model.js';
+import { Collection as CollectionModel } from '../../models/models.js';
 
 class Collection extends Abstract {
   /**

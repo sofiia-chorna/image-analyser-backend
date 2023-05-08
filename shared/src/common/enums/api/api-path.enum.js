@@ -1,4 +1,5 @@
 export const ApiPath = {
   COLLECTIONS: '/collections',
-  USERS: '/users'
+  USERS: '/users',
+  ANALYSES: '/analyses'
 };
