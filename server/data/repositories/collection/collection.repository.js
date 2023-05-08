@@ -1,6 +1,7 @@
 import { Abstract } from '../abstract/abstract.repository.js';
+import { Collection as CollectionModel } from '../../models/collection/collection.model.js';
 
-export class Collection extends Abstract {
+class Collection extends Abstract {
   /**
    * @return {Collection}
    */
@@ -59,3 +60,8 @@ export class Collection extends Abstract {
     return await this.deleteById(id);
   }
 }
+
+// Initialize collection repo
+export const collection = new Collection({
+  collectionModel: CollectionModel
+});

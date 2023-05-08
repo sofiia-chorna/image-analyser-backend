@@ -2,7 +2,7 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 import { ENV, ExitCode } from '../common/common.js';
 import { initApi } from '../api/api.js';
-import { collection } from '../services/services.js';
+import { collection, user } from '../services/services.js';
 
 class Server {
     /**
@@ -91,6 +91,7 @@ class Server {
         this.server.register(initApi, {
             services: {
                 collection: collection,
+                user: user,
             },
             prefix: ENV.APP.API_PATH
         });

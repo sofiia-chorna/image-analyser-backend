@@ -1,7 +1,9 @@
+import { collection as collectionRepository } from '../../data/repositories/repositories.js';
+
 /**
  * Collection service helper class
  */
-export class Collection {
+class Collection {
   /**
    * @param {!Object} params
    * @return {Collection}
@@ -62,3 +64,8 @@ export class Collection {
 
   // TODO Elastic Search method
 }
+
+// Initialize collection servise
+export const collection = new Collection({
+  collectionRepository: collectionRepository
+});

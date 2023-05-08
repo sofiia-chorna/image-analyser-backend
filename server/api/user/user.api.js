@@ -1,18 +1,18 @@
-import { CollectionsApiPath, ControllerHook, HttpMethod } from '../../common/common.js';
+import { UsersApiPath, ControllerHook, HttpMethod } from '../../common/common.js';
 import { wrapPayload } from '../helper/helper.js';
 
-const initCollection = (fastify, opts, done) => {
+const initUser = (fastify, opts, done) => {
   // Retrieve services
-  const { collection: collectionService } = opts.services;
+  const { user: userService } = opts.services;
 
   // READ ALL
   fastify.route({
     method: HttpMethod.GET,
-    url: CollectionsApiPath.ROOT,
+    url: UsersApiPath.ROOT,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await collectionService.getAll(request.query);
+      return await userService.getAll(request.query);
     },
 
     // Format response payload
@@ -24,44 +24,44 @@ const initCollection = (fastify, opts, done) => {
   // READ ONE
   fastify.route({
     method: HttpMethod.GET,
-    url: CollectionsApiPath.$ID,
+    url: UsersApiPath.$ID,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await collectionService.getById(request.params.id);
+      return await userService.getById(request.params.id);
     }
   });
 
   // CREATE ONE
   fastify.route({
     method: HttpMethod.POST,
-    url: CollectionsApiPath.ROOT,
+    url: UsersApiPath.ROOT,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await collectionService.insert(request.body);
+      return await userService.insert(request.body);
     }
   });
 
   // UPDATE ONE
   fastify.route({
     method: HttpMethod.PUT,
-    url: CollectionsApiPath.$ID,
+    url: UsersApiPath.$ID,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await collectionService.update(request.params.id, request.body);
+      return await userService.update(request.params.id, request.body);
     }
   });
 
   // DELETE ONE
   fastify.route({
     method: HttpMethod.DELETE,
-    url: CollectionsApiPath.$ID,
+    url: UsersApiPath.$ID,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await collectionService.delete(request.params.id);
+      return await userService.delete(request.params.id);
     },
 
     // Format response payload
@@ -73,4 +73,4 @@ const initCollection = (fastify, opts, done) => {
   done();
 };
 
-export { initCollection };
+export { initUser };
