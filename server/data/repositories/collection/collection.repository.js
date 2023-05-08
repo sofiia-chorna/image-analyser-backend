@@ -31,17 +31,23 @@ export class Collection extends Abstract {
    * @return {Object}
    */
   async insertCollection(collection) {
-    return await this.create(collection);
+    if (collection) {
+      const label = this.getLabel();
+      const query = `CREATE (n:${label} { name: $name, description: $description }) RETURN n`;
+      const { name, description } = collection;
+      return await this.neo4j.write(query, { name: name, description: description });
+    }
+    return await this.create();
   }
 
   /**
    * @private
+   * @param {string} id
    * @param {Object} collection
    * @return {Object}
    */
-  async updateCollection(collection) {
-    // TODO
-    return null;
+  async updateCollection(id, collection) {
+    return await this.updateById(id, collection);
   }
 
   /**

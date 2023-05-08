@@ -50,10 +50,9 @@ export class Abstract {
 
   /**
    * @private
-   * @param {!Object} data
    * @return {Promise<Object>}
    */
-  async create(data) {
+  async create() {
     const label = this.getLabel();
     const query = `CREATE (n:${label}) RETURN n`;
     return await this.neo4j.write(query);
@@ -65,8 +64,12 @@ export class Abstract {
    * @param {!Object} data
    * @return {Object}
    */
-  updateById(id, data) {
-    return null;
+  async updateById(id, data) {
+    // Exclude the 'id' property from the updated object
+    const { id: excludedId, ...props } = data;
+    const label = this.getLabel();
+    const query = `MATCH (n:${label}) WHERE id(n) = $id SET n += $props RETURN n`;
+    return await this.neo4j.write(query, { id: Number(id), props: props });
   }
 
   /**

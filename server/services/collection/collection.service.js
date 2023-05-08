@@ -40,7 +40,6 @@ export class Collection {
   async insert(collection) {
     return await this._collectionRepository.insertCollection(collection);
     // TODO insert to elastic search
-    // return this.getById(id);
   }
 
   /**
@@ -49,9 +48,8 @@ export class Collection {
    * @return {Object}
    */
   async update(id, collection) {
-    await this._collectionRepository.updateCollection(collection);
+    return await this._collectionRepository.updateCollection(id, collection);
     // TODO update to elastic search
-    return this.getById(id);
   }
 
   /**
