@@ -1,11 +1,11 @@
-import { ApiPath } from '../common/common.js';
+import {ApiPath, DATA_TYPE} from '../common/common.js';
 import { initCollection } from './collection/collection.api.js';
 import { initUser } from './user/user.api.js';
 import { initAnalyse } from './analyse/analyse.api.js';
 
 export function initApi(fastify, options, done) {
   // Retrieve services
-  const { services: { collection, user, analyse } } = options;
+  const { services } = options;
 
   // Validate scheme of data
   // fastify.setValidatorCompiler(({ schema }) => {
@@ -15,7 +15,7 @@ export function initApi(fastify, options, done) {
   // Register collection path & service
   fastify.register(initCollection, {
     services: {
-      collection: collection,
+      collection: services.get(DATA_TYPE.COLLECTION),
     },
     prefix: ApiPath.COLLECTIONS
   });
@@ -23,7 +23,7 @@ export function initApi(fastify, options, done) {
   // Register user path & service
   fastify.register(initUser, {
     services: {
-      user: user,
+      user: services.get(DATA_TYPE.USER),
     },
     prefix: ApiPath.USERS
   });
@@ -31,7 +31,7 @@ export function initApi(fastify, options, done) {
   // Register analyse path & service
   fastify.register(initAnalyse, {
     services: {
-      analyse: analyse,
+      analyse: services.get(DATA_TYPE.ANALYSE),
     },
     prefix: ApiPath.ANALYSES
   });

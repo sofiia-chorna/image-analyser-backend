@@ -1,4 +1,4 @@
-import { neo4jClient } from '../../../neo4j/neo4j.js';
+import { neo4j } from '../../../neo4j/index.js';
 
 export class Abstract {
   /**
@@ -16,7 +16,7 @@ export class Abstract {
      * @protected
      * @type {Neo4j}
      */
-    this.neo4j = neo4jClient;
+    this.neo4j = neo4j;
   }
 
   /**

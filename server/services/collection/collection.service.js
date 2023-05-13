@@ -1,4 +1,5 @@
 import { collection as collectionRepository } from '../../data/repositories/repositories.js';
+import { collection as elasticCollectionRepository } from '../../elastic/repositories/repositories.js';
 
 /**
  * Collection service helper class
@@ -10,13 +11,19 @@ class Collection {
    */
   constructor(params) {
     // Get repositories from params
-    const { collectionRepository } = params;
+    const { collectionRepository, elasticCollectionRepository } = params;
 
     /**
      * @private
      * @type {function(*)}
      */
     this._collectionRepository = collectionRepository;
+
+    /**
+     * @private
+     * @type {function(*)}
+     */
+    this._elasticCollectionRepository = elasticCollectionRepository;
   }
 
   /**
@@ -67,5 +74,6 @@ class Collection {
 
 // Initialize collection servise
 export const collection = new Collection({
-  collectionRepository: collectionRepository
+  collectionRepository: collectionRepository,
+  elasticCollectionRepository: elasticCollectionRepository
 });

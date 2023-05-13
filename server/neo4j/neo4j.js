@@ -2,12 +2,12 @@ import neo4j from 'neo4j-driver';
 import { ENV } from '../common/common.js';
 import { getDateLog } from '../helpers/helpers.js';
 
-class Neo4j {
+export class Neo4j {
     /**
      * @param {{debug: boolean}=} params
-     * @return {Neo4j}
+     * @return {!Neo4j}
      */
-    constructor(params= {}) {
+    constructor(params = {}) {
         /**
          * @private
          * @type {import('neo4j-driver').Driver}
@@ -71,7 +71,7 @@ class Neo4j {
     /**
      * @param {string} readQuery
      * @param {Object=} variables
-     * @return {Array<!Object>}
+     * @return {!Promise<Array<!Object>>}
      */
     async read(readQuery, variables = {}) {
         // Get current session
@@ -106,7 +106,7 @@ class Neo4j {
     /**
      * @param {string} writeQuery
      * @param {Object=} variables
-     * @return {Array<!Object>}
+     * @return {!Promise<Array<!Object>>}
      */
     async write(writeQuery, variables = {}) {
         // Get current session
@@ -164,6 +164,3 @@ class Neo4j {
         });
     }
 }
-
-// Singleton instance
-export const neo4jClient = new Neo4j({ debug: true });

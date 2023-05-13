@@ -2,13 +2,13 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 import { ENV, ExitCode } from '../common/common.js';
 import { initApi } from '../api/api.js';
-import { collection, user, analyse } from '../services/services.js';
 
-class Server {
+export class Server {
     /**
-     * @return {Server}
+     * @param {{services: Map<string, function(*)>}=} params
+     * @return {!Server}
      */
-    constructor() {
+    constructor(params) {
         /**
          * @private
          * @type {import('fastify').FastifyServer}
@@ -28,6 +28,13 @@ class Server {
          * @type {string}
          */
         this.HOST = ENV.APP.HOST ?? '0.0.0.0';
+
+        /**
+         * @private
+         * @constant
+         * @type {Map<string, function(*)>}
+         */
+        this.services = params.services ?? new Map();
     }
 
     /**
@@ -89,11 +96,7 @@ class Server {
      */
     registerRoutes() {
         this.server.register(initApi, {
-            services: {
-                collection: collection,
-                user: user,
-                analyse: analyse,
-            },
+            services: this.services,
             prefix: ENV.APP.API_PATH
         });
     }
@@ -115,6 +118,3 @@ class Server {
         }
     }
 }
-
-// Singleton instance
-export const serverClient = new Server();

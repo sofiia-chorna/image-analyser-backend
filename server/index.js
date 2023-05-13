@@ -1,8 +1,12 @@
-import { neo4jClient } from './neo4j/neo4j.js';
-import { serverClient } from './server/server.js';
+import { neo4j } from './neo4j/index.js';
+import { elastic } from './elastic/index.js';
+import { server } from './server/index.js';
 
 // Start Neo4j connection
-await neo4jClient.init();
+await neo4j.init();
+
+// Start Elastic connection
+await elastic.init();
 
 // Start Server
-await serverClient.init();
+await server.init();

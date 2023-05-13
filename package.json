@@ -1,5 +1,6 @@
 {
   "name": "image-analyser",
+  "main": "main.js",
   "description": "",
   "version": "1.0.0",
   "scripts": {

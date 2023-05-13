@@ -61,7 +61,6 @@ export class Analyse extends Abstract {
   }
 }
 
-
 // Initialize analyse repo
 export const analyse = new Analyse({
   analyseModel: AnalyseModel
