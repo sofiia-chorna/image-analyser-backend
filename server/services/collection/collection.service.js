@@ -47,8 +47,14 @@ class Collection {
    * @return {Object}
    */
   async insert(collection) {
-    return await this._collectionRepository.insertCollection(collection);
-    // TODO insert to elastic search
+    // Create in the db
+    const result = await this._collectionRepository.insertCollection(collection);
+
+    // Create in elastic
+    await this._elasticCollectionRepository.insertCollection(collection);
+
+    // Done
+    return result;
   }
 
   /**
@@ -72,7 +78,7 @@ class Collection {
   // TODO Elastic Search method
 }
 
-// Initialize collection servise
+// Initialize collection service
 export const collection = new Collection({
   collectionRepository: collectionRepository,
   elasticCollectionRepository: elasticCollectionRepository

@@ -1,26 +1,21 @@
+import { Abstract } from '../abstract/abstract.js';
 import { getAsISODate, getAsJSON } from '../../../helpers/convertors/convertors.js';
 import { QueryBuilder } from '../../QueryBuilder/QueryBuilder.js';
-import { DATA_TYPE, HttpCode } from '../../../common/common.js';
 
-export class Collection {
-    constructor({ elastic }) {
-        /**
-         * @constant
-         * @type {string}
-         */
-        this.index = DATA_TYPE.COLLECTION;
-
-        /**
-         * @type {!ElasticClient}
-         */
-        this.elastic = elastic;
+export class Collection extends Abstract {
+    /**
+     * @param {{elastic: !Elastic, index: string}} params
+     * @return {!Elastic}
+     */
+    constructor(params = {}) {
+        super(params);
     }
 
     /**
      * @param {!Object} params
      * @return {!Array<!Object>}
      */
-    async search(params) {
+    async searchCollections(params) {
         try {
             const { name, createdAt, tags, author, description } = params;
 
@@ -46,16 +41,7 @@ export class Collection {
                 .match('tags', tags);
 
             // Call elastic search
-            const instances = await this.elastic.search({
-                index: this.index,
-                query: query
-            });
-
-            // Process result
-            return instances.map(hit => ({
-                ...hit._source,
-                id: hit._id,
-            }));
+            return this.search(query);
         } catch (error) {
             console.error(error);
         }
@@ -65,22 +51,13 @@ export class Collection {
      * @param {!Object} body
      * @return {!Promise<Object>}
      */
-    async create(body) {
+    async insertCollection(body) {
         try {
             // Call elastic search: create
-            const id = await this.elastic.index({
-                index: this.index,
-                query: {
-                    ...body,
-                    date: body.date ? new Date(body.date).toISOString() : null,
-                }
+            return this.create({
+                ...body,
+                date: body.date ? new Date(body.date).toISOString() : null,
             });
-
-            // Get full instance
-            const instance = await this.elastic.getById(id);
-
-            // Map to have meaningful properties
-            return { ...instance._source, id: instance._id };
         } catch (error) {
             console.error(error);
         }
@@ -91,27 +68,10 @@ export class Collection {
      * @param {!Object} body
      * @return {!Promise<Object>}
      */
-    async update(id, body) {
+    async updateCollection(id, body) {
         try {
             // Call elastic search: update
-            const result = await this.elastic.update({
-                index: this.index,
-                id: id,
-                body: { doc: body }
-            });
-
-            // No such instance
-            if (result === null) {
-                return { message: 'Not Found', code: HttpCode.NOT_FOUND };
-            }
-
-            // Already updated
-            else if (result === 'noop') {
-                return { message: 'No Operation' , code: HttpCode.OK };
-            }
-
-            // Updated
-            return { message: 'OK' , code: HttpCode.OK };
+            return this.update(id, body);
         } catch (error) {
             console.error(error);
         }
@@ -121,21 +81,10 @@ export class Collection {
      * @param {string} id
      * @return {!Promise<Object>}
      */
-    async remove(id) {
+    async removeCollection(id) {
         try {
             // Call elastic search: remove
-            const result = await this.elastic.remove({
-                index: this.index,
-                id: id
-            });
-
-            // Instance deleted
-            if (result !== null) {
-                return { code: 200, message: result };
-            }
-
-            // Not found
-            return { code: HttpCode.NOT_FOUND, message: 'Not Found' };
+            return this.remove(id);
         } catch (error) {
             console.error(error);
         }

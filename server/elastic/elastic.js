@@ -72,7 +72,7 @@ export class Elastic {
 
     /**
      * @param {string} index
-     * @return {boolean}
+     * @return {!Promise<boolean>}
      */
     async exists(index) {
         return await this.client.indices.exists({ index: index });
