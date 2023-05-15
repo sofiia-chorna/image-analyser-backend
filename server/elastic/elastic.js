@@ -45,12 +45,39 @@ export class Elastic {
             // Delete already created indexes
             await this.destroyIndexes();
 
+            // Init indexes
+            await this.createIndexes();
+
             // Verify connection
             await this.testConnection();
         }
         // Connection error
         catch (error) {
             console.log(error);
+        }
+    }
+
+    /**
+     * @return {!Promise<void>}
+     */
+    async createIndexes() {
+        for (const index of Array.from(this.indexes)) {
+            await this.createIndex(index);
+        }
+    }
+
+    /**
+     * @param {string} index
+     * @return {!Promise<void>}
+     */
+    async createIndex(index) {
+        try {
+            const response = await this.client.indices.create({
+                index: index,
+            });
+            console.log(`Index '${index}' created:`, response);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -173,6 +200,7 @@ export class Elastic {
         if (!exists) {
             return;
         }
+        console.log(`Index '${index}' deleted:`, exists);
         await this.client.indices.delete({ index: index });
     }
 }

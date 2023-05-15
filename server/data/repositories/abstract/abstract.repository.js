@@ -50,12 +50,14 @@ export class Abstract {
 
   /**
    * @private
+   * @param {!Object} data
    * @return {Promise<Object>}
    */
-  async create() {
+  async create(data) {
     const label = this.getLabel();
-    const query = `CREATE (n:${label}) RETURN n`;
-    return await this.neo4j.write(query);
+    console.log(data)
+    const query = `CREATE (n:${label}) SET n = $props RETURN n`;
+    return await this.neo4j.write(query, { props: data });
   }
 
   /**

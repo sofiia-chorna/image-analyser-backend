@@ -24,6 +24,6 @@ export function getAsISODate(value) {
     }
 
     // If the input is not a valid date string, return null or handle accordingly
-    console.error(`Invalid date string: ${input}`);
+    console.error(`Invalid date string: ${date}`);
     return null;
 }

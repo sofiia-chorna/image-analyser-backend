@@ -26,7 +26,7 @@ export class Collection extends Abstract {
             const query = new QueryBuilder()
 
                 // Search in name field with regex
-                .regex('name', name)
+                .wildcard('name', name)
 
                 // Search in date between dates
                 .range('createdAt', getAsISODate(minDate), getAsISODate(maxDate))
@@ -54,10 +54,7 @@ export class Collection extends Abstract {
     async insertCollection(body) {
         try {
             // Call elastic search: create
-            return this.create({
-                ...body,
-                date: body.date ? new Date(body.date).toISOString() : null,
-            });
+            return this.create(body);
         } catch (error) {
             console.error(error);
         }

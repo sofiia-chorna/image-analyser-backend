@@ -31,7 +31,7 @@ class Collection {
    * @return {!Array<!Object>}
    */
   getAll(filter) {
-    return this._collectionRepository.getCollections(filter);
+    return this._elasticCollectionRepository.searchCollections(filter);
   }
 
   /**
@@ -43,10 +43,13 @@ class Collection {
   }
 
   /**
-   * @param {!Object} collection
+   * @param {!Object} data
    * @return {Object}
    */
-  async insert(collection) {
+  async insert(data) {
+    // Add creation date
+    const collection = { ...data, createdAt: new Date().toISOString() };
+
     // Create in the db
     const result = await this._collectionRepository.insertCollection(collection);
 
@@ -63,8 +66,14 @@ class Collection {
    * @return {Object}
    */
   async update(id, collection) {
-    return await this._collectionRepository.updateCollection(id, collection);
-    // TODO update to elastic search
+    // Update in the db
+    const result = await this._collectionRepository.updateCollection(id, collection);
+
+    // Update in elastic
+    await this._elasticCollectionRepository.updateCollection(collection);
+
+    // Done
+    return result;
   }
 
   /**
@@ -72,7 +81,15 @@ class Collection {
    * @return {Object}
    */
   async delete(id) {
-    return this._collectionRepository.deleteCollection(id);
+    // Delete in the db
+    const result = await this._collectionRepository.deleteCollection(id);
+
+    // Delete in elastic
+    await this._elasticCollectionRepository.removeCollection(collection);
+
+    // Done
+    return result;
+
   }
 
   // TODO Elastic Search method

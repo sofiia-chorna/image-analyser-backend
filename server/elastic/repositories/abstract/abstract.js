@@ -29,10 +29,7 @@ export class Abstract {
     async search(query) {
         try {
             // Call elastic search
-            const instances = await this.elastic.search({
-                index: this.index,
-                query: query
-            });
+            const instances = await this.elastic.search(this.index, query);
 
             // Process result
             return instances.map(hit => ({
@@ -51,13 +48,10 @@ export class Abstract {
     async create(query) {
         try {
             // Call elastic search: create
-            const id = await this.elastic.index({
-                index: this.index,
-                query: query
-            });
+            const id = await this.elastic.index(this.index, query);
 
             // Get full instance
-            const instance = await this.elastic.getById(id);
+            const instance = await this.elastic.getById(this.index, id);
 
             // Map to have meaningful properties
             return { ...instance._source, id: instance._id };
@@ -74,11 +68,7 @@ export class Abstract {
     async update(id, body) {
         try {
             // Call elastic search: update
-            const result = await this.elastic.update({
-                index: this.index,
-                id: id,
-                body: { doc: body }
-            });
+            const result = await this.elastic.update(this.index, id, { doc: body });
 
             // No such instance
             if (result === null) {
@@ -104,10 +94,7 @@ export class Abstract {
     async remove(id) {
         try {
             // Call elastic search: remove
-            const result = await this.elastic.remove({
-                index: this.index,
-                id: id
-            });
+            const result = await this.elastic.remove(this.index, id);
 
             // Instance deleted
             if (result !== null) {

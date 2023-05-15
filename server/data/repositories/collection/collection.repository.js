@@ -32,13 +32,7 @@ class Collection extends Abstract {
    * @return {Object}
    */
   async insertCollection(collection) {
-    if (collection) {
-      const label = this.getLabel();
-      const query = `CREATE (n:${label} { name: $name, description: $description }) RETURN n`;
-      const { name, description } = collection;
-      return await this.neo4j.write(query, { name: name, description: description });
-    }
-    return await this.create();
+    return await this.create(collection);
   }
 
   /**
