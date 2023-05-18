@@ -42,11 +42,8 @@ export class Elastic {
                 auth: this.auth
             });
 
-            // Delete already created indexes
-            await this.destroyIndexes();
-
             // Init indexes
-            await this.createIndexes();
+            await this.initIndexes();
 
             // Verify connection
             await this.testConnection();
@@ -60,9 +57,9 @@ export class Elastic {
     /**
      * @return {!Promise<void>}
      */
-    async createIndexes() {
+    async initIndexes() {
         for (const index of Array.from(this.indexes)) {
-            await this.createIndex(index);
+            await this.initIndex(index);
         }
     }
 
@@ -70,12 +67,15 @@ export class Elastic {
      * @param {string} index
      * @return {!Promise<void>}
      */
-    async createIndex(index) {
+    async initIndex(index) {
         try {
-            const response = await this.client.indices.create({
-                index: index,
-            });
-            console.log(`Index '${index}' created:`, response);
+            const exists = await this.exists(index);
+            if (!exists) {
+                const response = await this.client.indices.create({
+                    index: index,
+                });
+                console.log(`Index '${index}' created:`, response);
+            }
         } catch (error) {
             console.error(error);
         }
