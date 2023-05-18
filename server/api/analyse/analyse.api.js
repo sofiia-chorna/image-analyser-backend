@@ -1,5 +1,5 @@
 import { AnalysesApiPath, ControllerHook, HttpMethod } from '../../common/common.js';
-import { wrapPayload } from '../helper/helper.js';
+import { wrapResponse, wrapPayload } from '../helper/helper.js';
 
 const initAnalyse = (fastify, opts, done) => {
   // Retrieve services
@@ -17,7 +17,7 @@ const initAnalyse = (fastify, opts, done) => {
 
     // Format response payload
     [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
-      return wrapPayload(payload);
+      return wrapResponse(payload);
     },
   });
 
@@ -37,6 +37,12 @@ const initAnalyse = (fastify, opts, done) => {
     method: HttpMethod.POST,
     url: AnalysesApiPath.ROOT,
 
+    // Wrap payload
+    [ControllerHook.PRE_HANDLER]: (request, _reply, hookDone) => {
+      request.body = wrapPayload(request.body);
+      hookDone();
+    },
+
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
       return await analyseService.insert(request.body);
@@ -47,6 +53,12 @@ const initAnalyse = (fastify, opts, done) => {
   fastify.route({
     method: HttpMethod.PUT,
     url: AnalysesApiPath.$ID,
+
+    // Wrap payload
+    [ControllerHook.PRE_HANDLER]: async (request, _reply, hookDone) => {
+      request.body = wrapPayload(request.body, false);
+      hookDone();
+    },
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {

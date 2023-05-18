@@ -24,17 +24,18 @@ export class Abstract {
 
     /**
      * @param {!QueryBuilder} query
+     * @param {{size: number}=} params
      * @return {!Array<!Object>}
      */
-    async search(query) {
+    async search(query, params) {
         try {
             // Call elastic search
-            const instances = await this.elastic.search(this.index, query);
+            const instances = await this.elastic.search(this.index, query, params);
 
             // Process result
             return instances.map(hit => ({
                 ...hit._source,
-                id: hit._id,
+                elasticId: hit._id,
             }));
         } catch (error) {
             console.error(error);
@@ -54,7 +55,7 @@ export class Abstract {
             const instance = await this.elastic.getById(this.index, id);
 
             // Map to have meaningful properties
-            return { ...instance._source, id: instance._id };
+            return { ...instance._source, elasticId: instance._id };
         } catch (error) {
             console.error(error);
         }

@@ -17,9 +17,10 @@ export class Analyse extends AbstractModel {
     return {
       properties: {
         ...baseSchema.properties,
+        score: { type: 'number' },
         createdAt: { type: 'number' },
-        date: { type: 'string' },
-        labels: { type: 'array' }
+        labels: { type: 'array' },
+        image: { type: 'string' }
       }
     };
   }

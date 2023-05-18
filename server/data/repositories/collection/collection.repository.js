@@ -11,7 +11,7 @@ class Collection extends Abstract {
 
   /**
    * @private
-   * @return {Promise<!Array<!Object>>}
+   * @return {!Promise<!Array<!Object>>}
    */
   async getCollections() {
     return await this.getAll();
@@ -20,7 +20,7 @@ class Collection extends Abstract {
   /**
    * @private
    * @param {string} id
-   * @return {Promise<Object>}
+   * @return {!Promise<Object>}
    */
   async getCollectionById(id) {
     return await this.getById(id);
@@ -29,7 +29,7 @@ class Collection extends Abstract {
   /**
    * @private
    * @param {Object} collection
-   * @return {Object}
+   * @return {!Promise<Object>}
    */
   async insertCollection(collection) {
     return await this.create(collection);
@@ -39,7 +39,7 @@ class Collection extends Abstract {
    * @private
    * @param {string} id
    * @param {Object} collection
-   * @return {Object}
+   * @return {!Promise<Object>}
    */
   async updateCollection(id, collection) {
     return await this.updateById(id, collection);
@@ -48,10 +48,20 @@ class Collection extends Abstract {
   /**
    * @private
    * @param {string} id
-   * @return {Promise<Object>}
+   * @return {!Promise<Object>}
    */
   async deleteCollection(id) {
     return await this.deleteById(id);
+  }
+
+  /**
+   * @private
+   * @param {string | number} id
+   * @param {string | number} analyzeId
+   * @return {!Promise<Object>}
+   */
+  async addAnalyses(id, analyzeId) {
+    return await this.createRelation(this.model.analyseRel, id, analyzeId);
   }
 }
 

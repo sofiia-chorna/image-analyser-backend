@@ -32,13 +32,7 @@ export class User extends Abstract {
    * @return {Object}
    */
   async insertUser(user) {
-    if (user) {
-      const label = this.getLabel();
-      const query = `CREATE (n:${label} { fullname: $fullname, birthday: $birthday, occupation: $occupation }) RETURN n`;
-      const { fullname, birthday, occupation } = user;
-      return await this.neo4j.write(query, { fullname: fullname, birthday: birthday, occupation: occupation });
-    }
-    return await this.create();
+    return await this.create(user);
   }
 
   /**

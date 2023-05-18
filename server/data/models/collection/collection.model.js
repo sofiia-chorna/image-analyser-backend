@@ -1,5 +1,6 @@
 import { Abstract as AbstractModel } from '../abstract/abstract.model.js';
 import { TYPE, DATA_TYPE } from '../../../common/common.js';
+import { Relation } from '../../../neo4j/index.js';
 
 export class Collection extends AbstractModel {
   constructor() {
@@ -10,6 +11,13 @@ export class Collection extends AbstractModel {
      * @type {string}
      */
     this.type = TYPE.NODE;
+
+    // Relations
+    /**
+     * @protected
+     * @type {Relation}
+     */
+    this.analyseRel = new Relation({ origin: this.getLabel(), destination: DATA_TYPE.ANALYSE });
   }
 
   static get jsonSchema() {
@@ -20,10 +28,5 @@ export class Collection extends AbstractModel {
         name: { type: 'string' },
       }
     };
-  }
-
-  // TODO
-  static get relationMappings() {
-    return {};
   }
 }

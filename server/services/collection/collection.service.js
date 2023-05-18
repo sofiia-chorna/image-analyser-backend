@@ -43,21 +43,15 @@ class Collection {
   }
 
   /**
-   * @param {!Object} data
+   * @param {!Object} collection
    * @return {Object}
    */
-  async insert(data) {
-    // Add creation date
-    const collection = { ...data, createdAt: new Date().toISOString() };
-
+  async insert(collection) {
     // Create in the db
-    const result = await this._collectionRepository.insertCollection(collection);
+   const { id } = await this._collectionRepository.insertCollection(collection);
 
     // Create in elastic
-    await this._elasticCollectionRepository.insertCollection(collection);
-
-    // Done
-    return result;
+    return await this._elasticCollectionRepository.insertCollection({ ...collection, id: id });
   }
 
   /**
@@ -70,7 +64,7 @@ class Collection {
     const result = await this._collectionRepository.updateCollection(id, collection);
 
     // Update in elastic
-    await this._elasticCollectionRepository.updateCollection(collection);
+    await this._elasticCollectionRepository.updateCollection(id, collection);
 
     // Done
     return result;
@@ -82,17 +76,23 @@ class Collection {
    */
   async delete(id) {
     // Delete in the db
-    const result = await this._collectionRepository.deleteCollection(id);
+    await this._collectionRepository.deleteCollection(id);
 
     // Delete in elastic
-    await this._elasticCollectionRepository.removeCollection(collection);
-
-    // Done
-    return result;
-
+    return await this._elasticCollectionRepository.removeCollection(id);
   }
 
-  // TODO Elastic Search method
+  /**
+   * @param {{ origin: string | number, destination: string | number }} body
+   * @return {Object}
+   */
+  async addAnalyses(body) {
+    // Extract properties
+    const { origin: id, destination: analyzeId } = body;
+
+    // Create relation in the db
+    return  await this._collectionRepository.addAnalyses(id, analyzeId);
+  }
 }
 
 // Initialize collection service

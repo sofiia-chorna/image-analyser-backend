@@ -1,4 +1,4 @@
-import {ApiPath, DATA_TYPE} from '../common/common.js';
+import { ApiPath, DATA_TYPE } from '../common/common.js';
 import { initCollection } from './collection/collection.api.js';
 import { initUser } from './user/user.api.js';
 import { initAnalyse } from './analyse/analyse.api.js';

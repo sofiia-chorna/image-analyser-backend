@@ -1,3 +1,4 @@
+export { Relation } from './base/Relation.js';
 import { Neo4j } from './neo4j.js';
 
 // Singleton instance

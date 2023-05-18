@@ -1,10 +1,9 @@
 import { Client } from '@elastic/elasticsearch';
-import * as uuid from 'uuid';
 import { ENV } from '../common/common.js';
 
 export class Elastic {
     /**
-     * @param {{indexes: Set<string>=}} params
+     * @param {{indexes: Set<string>=, recreateIndexes: boolean}} params
      * @return {!Elastic}
      */
     constructor(params = {}) {
@@ -28,6 +27,13 @@ export class Elastic {
          * @type {Set<string>}
          */
         this.indexes = params.indexes ?? new Set();
+
+        /**
+         * @private
+         * @constant
+         * @type {boolean}
+         */
+        this.recreateIndexes = !!params.recreateIndexes;
     }
 
     /**
@@ -41,6 +47,11 @@ export class Elastic {
                 cloud: { id: this.cloudId },
                 auth: this.auth
             });
+
+            // Delete previously created indexes
+            if (this.recreateIndexes) {
+                await this.destroyIndexes();
+            }
 
             // Init indexes
             await this.initIndexes();
@@ -108,12 +119,14 @@ export class Elastic {
     /**
      * @param {string} index
      * @param {BooleanQuery} query
+     * @param {{ size: number}=} params
      * @return {!Promise<Array<Object>>}
      */
-    async search(index, query) {
+    async search(index, query, params = {}) {
         const { hits } = await this.client.search({
             index: index,
             query: query ?? { match_all: {} },
+            size: params.size
         });
         return hits.hits;
     }
@@ -138,10 +151,7 @@ export class Elastic {
     async index(index, body) {
         const { _id } = await this.client.index({
             index: index,
-            body: {
-                id: uuid.v4(),
-                ...body
-            }
+            body: body
         });
         return _id;
     }

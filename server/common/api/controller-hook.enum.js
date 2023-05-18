@@ -2,6 +2,7 @@
   @enum API hooks
 */
 export const ControllerHook = {
+  PRE_HANDLER: 'preHandler',
   HANDLER: 'handler',
   ON_ERROR: 'onError',
   ON_RESPONSE: 'onResponse',

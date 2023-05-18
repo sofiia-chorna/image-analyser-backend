@@ -11,7 +11,7 @@ export class Analyse extends Abstract {
 
   /**
    * @private
-   * @return {Promise<!Array<!Object>>}
+   * @return {!Promise<!Array<!Object>>}
    */
   async getAnalyses() {
     return await this.getAll();
@@ -20,7 +20,7 @@ export class Analyse extends Abstract {
   /**
    * @private
    * @param {string} id
-   * @return {Promise<Object>}
+   * @return {!Promise<Object>}
    */
   async getAnalyseById(id) {
     return await this.getById(id);
@@ -29,23 +29,17 @@ export class Analyse extends Abstract {
   /**
    * @private
    * @param {Object} analyse
-   * @return {Object}
+   * @return {!Promise<Object>}
    */
   async insertAnalyse(analyse) {
-    if (analyse) {
-      const label = this.getLabel();
-      const query = `CREATE (n:${label} { score: $score, createdAt: $createdAt, labels: $labels }) RETURN n`;
-      const { score, createdAt, labels } = analyse;
-      return await this.neo4j.write(query, { score: score, createdAt: createdAt, labels: labels });
-    }
-    return await this.create();
+    return await this.create(analyse);
   }
 
   /**
    * @private
    * @param {string} id
    * @param {Object} analyse
-   * @return {Object}
+   * @return {!Promise<Object>}
    */
   async updateAnalyse(id, analyse) {
     return await this.updateById(id, analyse);
@@ -54,7 +48,7 @@ export class Analyse extends Abstract {
   /**
    * @private
    * @param {string} id
-   * @return {Promise<Object>}
+   * @return {!Promise<Object>}
    */
   async deleteAnalyse(id) {
     return await this.deleteById(id);

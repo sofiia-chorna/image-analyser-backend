@@ -13,5 +13,6 @@ const indexes = new Set([
  * Controller singleton
  */
 export const elastic = new Elastic({
-    indexes: indexes
+    indexes: indexes,
+    recreateIndexes: true
 });

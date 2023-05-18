@@ -1,4 +1,4 @@
-import { neo4j } from '../../../neo4j/index.js';
+import { neo4j, Relation } from '../../../neo4j/index.js';
 
 export class Abstract {
   /**
@@ -28,7 +28,7 @@ export class Abstract {
 
   /**
    * @private
-   * @return {Promise<!Array<!Object>>}
+   * @return {!Promise<!Array<!Object>>}
    */
   async getAll() {
     const label = this.getLabel();
@@ -39,32 +39,34 @@ export class Abstract {
   /**
    * @private
    * @param {string} id
-   * @return {Promise<Object>}
+   * @return {!Promise<Object>}
    */
   async getById(id) {
     const label = this.getLabel();
     const query = `MATCH (n:${label}) WHERE id(n) = $id RETURN n`;
     const records = await this.neo4j.read(query, { id: Number(id) });
-    return records[0] ?? null;
+    return records ? records[0] : null;
   }
 
   /**
    * @private
    * @param {!Object} data
-   * @return {Promise<Object>}
+   * @return {!Promise<Object>}
    */
   async create(data) {
     const label = this.getLabel();
-    console.log(data)
     const query = `CREATE (n:${label}) SET n = $props RETURN n`;
-    return await this.neo4j.write(query, { props: data });
+    const [response] = await this.neo4j.write(query, { props: data });
+    return response;
+    // TODO create QueryResult to expose neo4j response info
+    //  return response.getFirst()
   }
 
   /**
    * @private
    * @param {string} id
    * @param {!Object} data
-   * @return {Object}
+   * @return {!Promise<Object>}
    */
   async updateById(id, data) {
     // Exclude the 'id' property from the updated object
@@ -77,12 +79,28 @@ export class Abstract {
   /**
    * @private
    * @param {string} id
-   * @return {Object}
+   * @return {!Promise<Object>}
    */
   async deleteById(id) {
     const label = this.getLabel();
     const query = `MATCH (n:${label}) WHERE id(n) = $id DELETE n RETURN n`;
     const records = await this.neo4j.write(query, { id: Number(id) });
-    return records[0] ?? null;
+    return records ? records[0] : null;
+  }
+
+  /**
+   * @private
+   * @param {Relation} relation
+   * @param {string | number} from
+   * @param {string | number} to
+   * @return {!Promise<Object>}
+   */
+  async createRelation(relation, from, to) {
+    // TODO cypher query builder class
+    const query = `MATCH (source:${relation.getOrigin()}), (target:${relation.getDestination()}) ` +
+        'WHERE source.id = $sourceId AND target.id = $targetId ' +
+        `CREATE (source)-[r:${relation.getName()}]->(target) ` +
+        'RETURN r';
+    return await this.neo4j.write(query, { sourceId: Number(from), targetId: Number(to) });
   }
 }

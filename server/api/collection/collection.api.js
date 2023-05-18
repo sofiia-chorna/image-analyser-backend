@@ -1,5 +1,5 @@
 import { CollectionsApiPath, ControllerHook, HttpMethod } from '../../common/common.js';
-import { wrapPayload } from '../helper/helper.js';
+import { wrapPayload, wrapResponse } from '../helper/helper.js';
 
 const initCollection = (fastify, opts, done) => {
   // Retrieve services
@@ -17,7 +17,7 @@ const initCollection = (fastify, opts, done) => {
 
     // Format response payload
     [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
-      return wrapPayload(payload);
+      return wrapResponse(payload);
     },
   });
 
@@ -37,6 +37,12 @@ const initCollection = (fastify, opts, done) => {
     method: HttpMethod.POST,
     url: CollectionsApiPath.ROOT,
 
+    // Wrap payload
+    [ControllerHook.PRE_HANDLER]: (request, _reply, hookDone) => {
+      request.body = wrapPayload(request.body);
+      hookDone();
+    },
+
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
       return await collectionService.insert(request.body);
@@ -47,6 +53,12 @@ const initCollection = (fastify, opts, done) => {
   fastify.route({
     method: HttpMethod.PUT,
     url: CollectionsApiPath.$ID,
+
+    // Wrap payload
+    [ControllerHook.PRE_HANDLER]: async (request, _reply, hookDone) => {
+      request.body = wrapPayload(request.body, false);
+      hookDone();
+    },
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
@@ -68,6 +80,17 @@ const initCollection = (fastify, opts, done) => {
     [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
       return { success: payload !== null };
     },
+  });
+
+  // ADD ANALYSE
+  fastify.route({
+    method: HttpMethod.POST,
+    url: CollectionsApiPath.ANALYSES,
+
+    // Handle request
+    [ControllerHook.HANDLER]: async (request) => {
+      return await collectionService.addAnalyses(request.body);
+    }
   });
 
   done();

@@ -41,7 +41,7 @@ export class Collection extends Abstract {
                 .match('tags', tags);
 
             // Call elastic search
-            return this.search(query);
+            return await this.search(query);
         } catch (error) {
             console.error(error);
         }
@@ -54,7 +54,7 @@ export class Collection extends Abstract {
     async insertCollection(body) {
         try {
             // Call elastic search: create
-            return this.create(body);
+            return await this.create(body);
         } catch (error) {
             console.error(error);
         }
@@ -67,8 +67,14 @@ export class Collection extends Abstract {
      */
     async updateCollection(id, body) {
         try {
+            // Build query
+            const query = new QueryBuilder().match('id', id);
+
+            // Exact elastic id
+            const [record] = await this.search(query, { size: 1 });
+            const { elasticId } = record;
             // Call elastic search: update
-            return this.update(id, body);
+            return await this.update(elasticId, body);
         } catch (error) {
             console.error(error);
         }
@@ -80,8 +86,15 @@ export class Collection extends Abstract {
      */
     async removeCollection(id) {
         try {
+            // Build query
+            const query = new QueryBuilder().match('id', id);
+
+            // Exact elastic id
+            const [record] = await this.search(query, { size: 1 });
+            const { elasticId } = record;
+
             // Call elastic search: remove
-            return this.remove(id);
+            return await this.remove(elasticId);
         } catch (error) {
             console.error(error);
         }
