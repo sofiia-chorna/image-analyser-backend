@@ -9,7 +9,6 @@
   "automerge": false,
   "commitMessageTopic": "{{depName}}",
   "prBodyTemplate": "This PR updates the {{depName}} dependency to its latest version.\n\n{{changelog}}",
-  "branchName": "renovate/dependency-update",
   "ignoreDeps": ["renovate-bot"],
   "ignorePaths": ["docs/**", "test/**"]
 }
