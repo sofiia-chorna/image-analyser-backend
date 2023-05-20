@@ -65,27 +65,45 @@ class User {
   // TODO Elastic Search method
 
   /**
-   * @param {{ origin: string | number, destination: string | number }} body
+   * @param {string} id
+   * @param {{ destination: string | number }} body
    * @return {Object}
    */
-  async addAnalyse(body) {
+  async addAnalyse(id, body) {
     // Extract properties
-    const { origin: id, destination: analyzeId } = body;
+    const { destination: analyzeId } = body;
 
     // Create relation in the db
     return await this._userRepository.addAnalyse(id, analyzeId);
   }
 
   /**
-   * @param {{ origin: string | number, destination: string | number }} body
+   * @param {string} id
+   * @param {{ destination: string | number }} body
    * @return {Object}
    */
-  async addCollection(body) {
+  async addCollection(id, body) {
     // Extract properties
-    const { origin: id, destination: collectionId } = body;
+    const { destination: collectionId } = body;
 
     // Create relation in the db
     return await this._userRepository.addCollection(id, collectionId);
+  }
+
+  /**
+   * @param {string} id
+   * @return {Object}
+   */
+  async getAnalyses(id) {
+    return await this._userRepository.getAnalyses(id);
+  }
+
+  /**
+   * @param {string} id
+   * @return {Object}
+   */
+  async getCollections(id) {
+    return await this._userRepository.getCollections(id);
   }
 }
 

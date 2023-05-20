@@ -63,6 +63,16 @@ class Collection extends Abstract {
   async addAnalyse(id, analyzeId) {
     return await this.createRelation(this.model.analyseRel, id, analyzeId);
   }
+
+  /**
+   * @private
+   * @param {string | number} id
+   * @return {!Promise<!Array<!Object>>}
+   */
+  async getAnalyses(id){
+    return await this.followRelation(this.model.analyseRel, id);
+  }
+
 }
 
 // Initialize collection repo

@@ -56,8 +56,8 @@ export class Abstract {
   async create(data) {
     const label = this.getLabel();
     const query = `CREATE (n:${label}) SET n = $props RETURN n`;
-    const [response] = await this.neo4j.write(query, { props: data });
-    return response;
+    const responses = await this.neo4j.write(query, { props: data });
+    return responses ? responses[0] : null;
     // TODO create QueryResult to expose neo4j response info
     //  return response.getFirst()
   }
@@ -97,10 +97,24 @@ export class Abstract {
    */
   async createRelation(relation, from, to) {
     // TODO cypher query builder class
-    const query = `MATCH (source:${relation.getOrigin()}), (target:${relation.getDestination()}) ` +
-        'WHERE id(source) = $sourceId AND id(target) = $targetId ' +
-        `CREATE (source)-[r:${relation.getName()}]->(target) ` +
+    const query = `MATCH (origin:${relation.getOrigin()}), (destination:${relation.getDestination()}) ` +
+        'WHERE id(origin) = $originId AND id(destination) = $destinationId ' +
+        `CREATE (origin)-[r:${relation.getName()}]->(destination) ` +
         'RETURN r';
-    return await this.neo4j.write(query, { sourceId: Number(from), targetId: Number(to) });
+    return await this.neo4j.write(query, { originId: Number(from), destinationId: Number(to) });
+  }
+
+  /**
+   * @private
+   * @param {Relation} relation
+   * @param {string | number} from
+   * @return {!Promise<Object>}
+   */
+  async followRelation(relation, from) {
+    // TODO cypher query builder class
+    const query = `MATCH (origin:${relation.getOrigin()})-[:${relation.getName()}]->(destination:${relation.getDestination()}) ` +
+    `WHERE id(origin) = $originId ` +
+    `RETURN destination`;
+    return await this.neo4j.write(query, { originId: Number(from) });
   }
 }

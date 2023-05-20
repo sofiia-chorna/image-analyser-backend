@@ -85,12 +85,28 @@ const initCollection = (fastify, opts, done) => {
   // ADD ANALYSE
   fastify.route({
     method: HttpMethod.POST,
-    url: CollectionsApiPath.ANALYSES,
+    url: CollectionsApiPath.$ID_ANALYSES,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await collectionService.addAnalyse(request.body);
+      return await collectionService.addAnalyse(request.params.id, request.body);
     }
+  });
+
+  // GET ANALYSES
+  fastify.route({
+    method: HttpMethod.GET,
+    url: CollectionsApiPath.$ID_ANALYSES,
+
+    // Handle request
+    [ControllerHook.HANDLER]: async (request) => {
+      return await collectionService.getAnalyses(request.params.id);
+    },
+
+    // Format response payload
+    [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
+      return wrapResponse(payload);
+    },
   });
 
   done();

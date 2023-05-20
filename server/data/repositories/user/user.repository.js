@@ -73,6 +73,24 @@ export class User extends Abstract {
   async addCollection(id, collectionId) {
     return await this.createRelation(this.model.collectionRel, id, collectionId);
   }
+
+  /**
+   * @private
+   * @param {string | number} id
+   * @return {!Promise<!Array<!Object>>}
+   */
+  async getAnalyses(id){
+    return await this.followRelation(this.model.analyseRel, id);
+  }
+
+  /**
+   * @private
+   * @param {string | number} id
+   * @return {!Promise<!Array<!Object>>}
+   */
+  async getCollections(id) {
+    return await this.followRelation(this.model.collectionRel, id);
+  }
 }
 
 

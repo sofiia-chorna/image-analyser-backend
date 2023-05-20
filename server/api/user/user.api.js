@@ -85,23 +85,55 @@ const initUser = (fastify, opts, done) => {
   // ADD ANALYSE
   fastify.route({
     method: HttpMethod.POST,
-    url: UsersApiPath.ANALYSES,
+    url: UsersApiPath.$ID_ANALYSES,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await userService.addAnalyse(request.body);
+      return await userService.addAnalyse(request.params.id, request.body);
     }
   });
 
   // ADD COLLECTION
   fastify.route({
     method: HttpMethod.POST,
-    url: UsersApiPath.COLLECTIONS,
+    url: UsersApiPath.$ID_COLLECTIONS,
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await userService.addCollection(request.body);
+      return await userService.addCollection(request.params.id, request.body);
     }
+  });
+
+  // GET ANALYSES
+  fastify.route({
+    method: HttpMethod.GET,
+    url: UsersApiPath.$ID_ANALYSES,
+
+    // Handle request
+    [ControllerHook.HANDLER]: async (request) => {
+      return await userService.getAnalyses(request.params.id);
+    },
+
+    // Format response payload
+    [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
+      return wrapResponse(payload);
+    },
+  });
+
+  // GET COLLECTIONS
+  fastify.route({
+    method: HttpMethod.GET,
+    url: UsersApiPath.$ID_COLLECTIONS,
+
+    // Handle request
+    [ControllerHook.HANDLER]: async (request) => {
+      return await userService.getCollections(request.params.id);
+    },
+
+    // Format response payload
+    [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
+      return wrapResponse(payload);
+    },
   });
 
   done();

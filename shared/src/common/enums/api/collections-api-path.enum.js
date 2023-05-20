@@ -1,5 +1,5 @@
 export const CollectionsApiPath = {
   ROOT: '/',
   $ID: '/:id',
-  ANALYSES: '/analyses'
+  $ID_ANALYSES: '/:id/analyses'
 };
