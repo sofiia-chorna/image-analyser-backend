@@ -51,7 +51,7 @@ class Collection {
    const { id } = await this._collectionRepository.insertCollection(collection);
 
     // Create in elastic
-    return await this._elasticCollectionRepository.insertCollection({ ...collection, id: id });
+    return await this._elasticCollectionRepository.upsertCollection(id, collection);
   }
 
   /**
@@ -61,13 +61,10 @@ class Collection {
    */
   async update(id, collection) {
     // Update in the db
-    const result = await this._collectionRepository.updateCollection(id, collection);
+    await this._collectionRepository.updateCollection(id, collection);
 
     // Update in elastic
-    await this._elasticCollectionRepository.updateCollection(id, collection);
-
-    // Done
-    return result;
+    return await this._elasticCollectionRepository.upsertCollection(id, collection);
   }
 
   /**
@@ -91,7 +88,7 @@ class Collection {
     const { origin: id, destination: analyzeId } = body;
 
     // Create relation in the db
-    return  await this._collectionRepository.addAnalyses(id, analyzeId);
+    return await this._collectionRepository.addAnalyses(id, analyzeId);
   }
 }
 

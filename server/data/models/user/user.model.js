@@ -18,7 +18,7 @@ export class User extends AbstractModel {
       properties: {
         ...baseSchema.properties,
         fullname: { type: 'string' },
-        birthday: { type: 'string' },
+        email: { type: 'string' },
         occupation: { type: 'string' }
       }
     };

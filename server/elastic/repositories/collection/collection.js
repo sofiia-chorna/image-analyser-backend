@@ -65,16 +65,10 @@ export class Collection extends Abstract {
      * @param {!Object} body
      * @return {!Promise<Object>}
      */
-    async updateCollection(id, body) {
+    async upsertCollection(id, body) {
         try {
-            // Build query
-            const query = new QueryBuilder().match('id', id);
-
-            // Exact elastic id
-            const [record] = await this.search(query, { size: 1 });
-            const { elasticId } = record;
             // Call elastic search: update
-            return await this.update(elasticId, body);
+            return await this.upsert(id, body);
         } catch (error) {
             console.error(error);
         }
@@ -86,15 +80,8 @@ export class Collection extends Abstract {
      */
     async removeCollection(id) {
         try {
-            // Build query
-            const query = new QueryBuilder().match('id', id);
-
-            // Exact elastic id
-            const [record] = await this.search(query, { size: 1 });
-            const { elasticId } = record;
-
             // Call elastic search: remove
-            return await this.remove(elasticId);
+            return await this.remove(id);
         } catch (error) {
             console.error(error);
         }

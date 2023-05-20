@@ -55,7 +55,7 @@ const initAnalyse = (fastify, opts, done) => {
     url: AnalysesApiPath.$ID,
 
     // Wrap payload
-    [ControllerHook.PRE_HANDLER]: async (request, _reply, hookDone) => {
+    [ControllerHook.PRE_HANDLER]: (request, _reply, hookDone) => {
       request.body = wrapPayload(request.body, false);
       hookDone();
     },

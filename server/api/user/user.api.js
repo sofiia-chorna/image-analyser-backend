@@ -39,7 +39,7 @@ const initUser = (fastify, opts, done) => {
 
     // Wrap payload
     [ControllerHook.PRE_HANDLER]: async (request, _reply, hookDone) => {
-      request.body = wrapPayload(request.body, false);
+      request.body = wrapPayload(request.body);
       hookDone();
     },
 

@@ -1,5 +1,3 @@
-import * as uuid from 'uuid';
-
 /**
  * @param {!Object} payload
  * @return {!Object}

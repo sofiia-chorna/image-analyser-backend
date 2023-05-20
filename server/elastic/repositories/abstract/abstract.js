@@ -35,7 +35,7 @@ export class Abstract {
             // Process result
             return instances.map(hit => ({
                 ...hit._source,
-                elasticId: hit._id,
+                id: hit._id,
             }));
         } catch (error) {
             console.error(error);
@@ -55,7 +55,27 @@ export class Abstract {
             const instance = await this.elastic.getById(this.index, id);
 
             // Map to have meaningful properties
-            return { ...instance._source, elasticId: instance._id };
+            return { ...instance._source, id: instance._id };
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    /**
+     * @param {string} id
+     * @param {!Object} body
+     * @return {!Promise<Object>}
+     */
+    async upsert(id, body) {
+        try {
+            // Call elastic search: update
+            await this.elastic.upsert(this.index, id, { doc: body });
+
+            // Get full instance
+            const instance = await this.elastic.getById(this.index, id);
+
+            // Map to have meaningful properties
+            return { ...instance._source.doc, id: instance._id };
         } catch (error) {
             console.error(error);
         }

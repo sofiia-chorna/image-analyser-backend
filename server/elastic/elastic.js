@@ -145,6 +145,25 @@ export class Elastic {
 
     /**
      * @param {string} index
+     * @param {string} id
+     * @param {Object} body
+     * @return {!Promise<string | null>}
+     */
+    async upsert(index, id, body) {
+        try {
+            const { result } = await this.client.index({
+                index: index,
+                id: id,
+                body: body
+            });
+            return result;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    /**
+     * @param {string} index
      * @param {Object} body
      * @return {!Promise<string | null>}
      */

@@ -98,7 +98,7 @@ export class Abstract {
   async createRelation(relation, from, to) {
     // TODO cypher query builder class
     const query = `MATCH (source:${relation.getOrigin()}), (target:${relation.getDestination()}) ` +
-        'WHERE source.id = $sourceId AND target.id = $targetId ' +
+        'WHERE id(source) = $sourceId AND id(target) = $targetId ' +
         `CREATE (source)-[r:${relation.getName()}]->(target) ` +
         'RETURN r';
     return await this.neo4j.write(query, { sourceId: Number(from), targetId: Number(to) });
