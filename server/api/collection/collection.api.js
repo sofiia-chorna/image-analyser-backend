@@ -89,7 +89,7 @@ const initCollection = (fastify, opts, done) => {
 
     // Handle request
     [ControllerHook.HANDLER]: async (request) => {
-      return await collectionService.addAnalyses(request.body);
+      return await collectionService.addAnalyse(request.body);
     }
   });
 

@@ -53,6 +53,26 @@ export class User extends Abstract {
   async deleteUser(id) {
     return await this.deleteById(id);
   }
+
+  /**
+   * @private
+   * @param {string | number} id
+   * @param {string | number} analyzeId
+   * @return {!Promise<Object>}
+   */
+  async addAnalyse(id, analyzeId) {
+    return await this.createRelation(this.model.analyseRel, id, analyzeId);
+  }
+
+  /**
+   * @private
+   * @param {string | number} id
+   * @param {string | number} collectionId
+   * @return {!Promise<Object>}
+   */
+  async addCollection(id, collectionId) {
+    return await this.createRelation(this.model.collectionRel, id, collectionId);
+  }
 }
 
 

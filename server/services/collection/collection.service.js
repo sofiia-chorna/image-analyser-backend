@@ -83,12 +83,12 @@ class Collection {
    * @param {{ origin: string | number, destination: string | number }} body
    * @return {Object}
    */
-  async addAnalyses(body) {
+  async addAnalyse(body) {
     // Extract properties
     const { origin: id, destination: analyzeId } = body;
 
     // Create relation in the db
-    return await this._collectionRepository.addAnalyses(id, analyzeId);
+    return await this._collectionRepository.addAnalyse(id, analyzeId);
   }
 }
 

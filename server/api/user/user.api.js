@@ -1,4 +1,4 @@
-import { UsersApiPath, ControllerHook, HttpMethod } from '../../common/common.js';
+import {UsersApiPath, ControllerHook, HttpMethod, CollectionsApiPath} from '../../common/common.js';
 import { wrapPayload, wrapResponse } from '../helper/helper.js';
 
 const initUser = (fastify, opts, done) => {
@@ -38,7 +38,7 @@ const initUser = (fastify, opts, done) => {
     url: UsersApiPath.ROOT,
 
     // Wrap payload
-    [ControllerHook.PRE_HANDLER]: async (request, _reply, hookDone) => {
+    [ControllerHook.PRE_HANDLER]: (request, _reply, hookDone) => {
       request.body = wrapPayload(request.body);
       hookDone();
     },
@@ -80,6 +80,28 @@ const initUser = (fastify, opts, done) => {
     [ControllerHook.PRE_SERIALIZATION]: async (_request, _reply, payload) => {
       return { success: payload !== null };
     },
+  });
+
+  // ADD ANALYSE
+  fastify.route({
+    method: HttpMethod.POST,
+    url: UsersApiPath.ANALYSES,
+
+    // Handle request
+    [ControllerHook.HANDLER]: async (request) => {
+      return await userService.addAnalyse(request.body);
+    }
+  });
+
+  // ADD COLLECTION
+  fastify.route({
+    method: HttpMethod.POST,
+    url: UsersApiPath.COLLECTIONS,
+
+    // Handle request
+    [ControllerHook.HANDLER]: async (request) => {
+      return await userService.addCollection(request.body);
+    }
   });
 
   done();

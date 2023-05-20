@@ -13,6 +13,7 @@ export class Collection extends AbstractModel {
     this.type = TYPE.NODE;
 
     // Relations
+
     /**
      * @protected
      * @type {Relation}

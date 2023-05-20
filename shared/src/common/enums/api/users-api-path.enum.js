@@ -1,4 +1,6 @@
 export const UsersApiPath = {
   ROOT: '/',
-  $ID: '/:id'
+  $ID: '/:id',
+  ANALYSES: '/analyses',
+  COLLECTIONS: '/collections'
 };

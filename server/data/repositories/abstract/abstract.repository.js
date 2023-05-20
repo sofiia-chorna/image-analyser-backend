@@ -83,7 +83,7 @@ export class Abstract {
    */
   async deleteById(id) {
     const label = this.getLabel();
-    const query = `MATCH (n:${label}) WHERE id(n) = $id DELETE n RETURN n`;
+    const query = `MATCH (n:${label}) WHERE id(n) = $id DETACH DELETE n RETURN n`;
     const records = await this.neo4j.write(query, { id: Number(id) });
     return records ? records[0] : null;
   }

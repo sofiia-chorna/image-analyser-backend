@@ -60,7 +60,7 @@ class Collection extends Abstract {
    * @param {string | number} analyzeId
    * @return {!Promise<Object>}
    */
-  async addAnalyses(id, analyzeId) {
+  async addAnalyse(id, analyzeId) {
     return await this.createRelation(this.model.analyseRel, id, analyzeId);
   }
 }

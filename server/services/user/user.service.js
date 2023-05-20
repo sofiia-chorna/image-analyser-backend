@@ -63,6 +63,30 @@ class User {
   }
 
   // TODO Elastic Search method
+
+  /**
+   * @param {{ origin: string | number, destination: string | number }} body
+   * @return {Object}
+   */
+  async addAnalyse(body) {
+    // Extract properties
+    const { origin: id, destination: analyzeId } = body;
+
+    // Create relation in the db
+    return await this._userRepository.addAnalyse(id, analyzeId);
+  }
+
+  /**
+   * @param {{ origin: string | number, destination: string | number }} body
+   * @return {Object}
+   */
+  async addCollection(body) {
+    // Extract properties
+    const { origin: id, destination: collectionId } = body;
+
+    // Create relation in the db
+    return await this._userRepository.addCollection(id, collectionId);
+  }
 }
 
 // Initialize user service
