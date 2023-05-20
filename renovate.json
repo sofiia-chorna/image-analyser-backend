@@ -4,7 +4,7 @@
     "config:base"
   ],
   "reviewers": ["sofiia-chorna"],
-  "schedule": ["every weekday"],
+  "schedule": ["at any time"],
   "labels": ["renovate"],
   "automerge": false,
   "commitMessageTopic": "{{depName}}",
