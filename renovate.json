@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "reviewers": ["sofiia-chorna"],
+  "schedule": ["every weekday"],
+  "labels": ["renovate"],
+  "automerge": false,
+  "commitMessageTopic": "{{depName}}",
+  "prBodyTemplate": "This PR updates the {{depName}} dependency to its latest version.\n\n{{changelog}}",
+  "ignoreDeps": ["renovate-bot"],
+  "ignorePaths": ["docs/**", "test/**"]
+}
