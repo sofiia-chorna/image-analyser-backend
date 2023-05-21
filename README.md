@@ -1,8 +1,8 @@
 # Image Analyser Project
 
 Server:
-- Neo4j module (WIP)
-- Elastic Search module (to be reused)
+- Neo4j module (OK)
+- Elastic Search module (OK)
 - API (WIP)
 
 Client:
