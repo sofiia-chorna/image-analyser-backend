@@ -1,4 +1,4 @@
-import {UsersApiPath, ControllerHook, HttpMethod, CollectionsApiPath} from '../../common/common.js';
+import { UsersApiPath, ControllerHook, HttpMethod } from '../../common/common.js';
 import { wrapPayload, wrapResponse } from '../helper/helper.js';
 
 const initUser = (fastify, opts, done) => {
