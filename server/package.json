@@ -22,6 +22,7 @@
     "dotenv": "16.0.3",
     "fastify": "4.17.0",
     "neo4j-driver": "5.8.0",
+    "googleapis": "118.0.0",
     "rxjs": "7.8.1",
     "shared": "file:../shared",
     "uuid": "9.0.0"

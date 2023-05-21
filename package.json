@@ -7,7 +7,8 @@
     "install:shared": "cd shared && npm install",
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
-    "install:all": "npm install && npm run install:shared && npm run install:client && npm run install:server"
+    "install:all": "npm install && npm run install:shared && npm run install:server",
+    "sonarqube-scanner": "sonar-scanner -Dsonar.token=sqp_d095a1dd3843773258cf35e1de9d2fa1621d2772"
   },
   "author": "Sofiia Chorna",
   "license": "ISC"

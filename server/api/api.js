@@ -2,6 +2,7 @@ import { ApiPath, DATA_TYPE } from '../common/common.js';
 import { initCollection } from './collection/collection.api.js';
 import { initUser } from './user/user.api.js';
 import { initAnalyse } from './analyse/analyse.api.js';
+import { initAuth } from './auth/auth.api.js';
 
 export function initApi(fastify, options, done) {
   // Retrieve services
@@ -34,6 +35,14 @@ export function initApi(fastify, options, done) {
       analyse: services.get(DATA_TYPE.ANALYSE),
     },
     prefix: ApiPath.ANALYSES
+  });
+
+  // Register auth path & service
+  fastify.register(initAuth, {
+    services: {
+      auth: services.get(DATA_TYPE.AUTH),
+    },
+    prefix: ApiPath.AUTH
   });
 
   done();

@@ -4,5 +4,6 @@
 export const DATA_TYPE = {
     COLLECTION: 'collection',
     USER: 'user',
-    ANALYSE: 'analyse'
+    ANALYSE: 'analyse',
+    AUTH: 'auth'
 };

@@ -50,6 +50,19 @@ export class Abstract {
 
   /**
    * @private
+   * @param {string} field
+   * @param {string | number} value
+   * @return {!Promise<Object>}
+   */
+  async getByField(field, value) {
+    const label = this.getLabel();
+    const query = `MATCH (n:${label}) WHERE ${field} = $value RETURN n`;
+    const records = await this.neo4j.read(query, { value: value });
+    return records ? records[0] : null;
+  }
+
+  /**
+   * @private
    * @param {!Object} data
    * @return {!Promise<Object>}
    */
