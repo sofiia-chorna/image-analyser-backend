@@ -11,3 +11,4 @@ build.out_non-tech/
 package-lock.json
 pnpm-lock.yaml
 .env
+.scannerwork/
