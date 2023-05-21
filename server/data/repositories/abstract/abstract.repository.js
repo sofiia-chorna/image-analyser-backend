@@ -83,7 +83,7 @@ export class Abstract {
    */
   async updateById(id, data) {
     // Exclude the 'id' property from the updated object
-    const { id: excludedId, ...props } = data;
+    const { id: _excludedId, ...props } = data;
     const label = this.getLabel();
     const query = `MATCH (n:${label}) WHERE id(n) = $id SET n += $props RETURN n`;
     return await this.neo4j.write(query, { id: Number(id), props: props });

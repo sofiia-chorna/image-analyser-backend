@@ -46,7 +46,7 @@ export class Server {
         await this.stopServer();
 
         // Create a new server
-        await this.createServer();
+        this.createServer();
 
         // Add the routes
         this.registerRoutes();
@@ -60,7 +60,7 @@ export class Server {
      * @return {!Promise<void>}
      */
     async stopServer() {
-        if (!!this.server) {
+        if (this.server) {
             console.info('Try closing the server');
             await this.server.close();
             console.info('Server has been closed');
