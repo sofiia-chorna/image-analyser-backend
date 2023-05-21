@@ -1,4 +1,4 @@
-export { ApiPath, CollectionsApiPath, UsersApiPath, AnalysesApiPath } from './api/api.js';
+export { ApiPath, CollectionsApiPath, UsersApiPath, AnalysesApiPath, AuthApiPath } from './api/api.js';
 export { HttpCode, HttpMethod } from './http/http.js';
 export { CollectionPayloadKey } from './collection/collection.js';
 export { ExceptionMessage, ExceptionName } from './exception/exception.js';

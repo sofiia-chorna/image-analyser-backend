@@ -28,6 +28,16 @@ export class User extends Abstract {
 
   /**
    * @private
+   * @param {string} field
+   * @param {string | number} value
+   * @return {!Promise<Object>}
+   */
+  async getUserByField(field, value) {
+    return await this.getByField(field, value);
+  }
+
+  /**
+   * @private
    * @param {Object} user
    * @return {!Promise<Object>}
    */
