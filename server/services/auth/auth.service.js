@@ -1,5 +1,7 @@
+import { HttpCode, HttpError, HttpMessage } from '../../common/common.js';
 import { user as userRepository } from '../../data/repositories/repositories.js';
 import { googleProvider } from '../../providers/google/google.provider.js';
+import { createToken, cryptCompare, encrypt } from '../../helpers/helpers.js';
 
 /**
  * Auth service helper class
@@ -50,6 +52,63 @@ class Auth {
 
         // New user -> save to the db
         return await this._userRepository.insertUser(oauthUserData);
+    }
+
+    /**
+     * @param {{ email: string, password: string }} data
+     * @returns {!Promise<Object>}
+     */
+    async register(data) {
+        const { email, password } = data;
+        // Check email
+        const user = await this._userRepository.getUserByField('email', email);
+        if (user) {
+            throw new HttpError({
+                status: HttpCode.BAD_REQUEST,
+                message: HttpMessage.EMAIL_ALREADY_EXISTS,
+            });
+        }
+
+        // Create user
+        await this._userRepository.insertUser({
+            ...data,
+            password: await encrypt(password)
+        });
+
+        // Login
+        return await this.login(data);
+    }
+
+    /**
+     * @param {{ email: string, password:string }} data
+     * @returns {!Promise<Object>}
+     */
+    async login(data) {
+        const { email, password } = data;
+
+        // Check email
+        const user = await this._userRepository.getUserByField('email', email);
+        if (!user) {
+            throw new HttpError({
+                status: HttpCode.BAD_REQUEST,
+                message: HttpMessage.INVALID_LOGIN_DATA,
+            });
+        }
+
+        // Check password
+        const isPasswordCorrect = await cryptCompare(password, user.password);
+        if (!isPasswordCorrect) {
+            throw new HttpError({
+                status: HttpCode.BAD_REQUEST,
+                message: HttpMessage.INVALID_LOGIN_DATA,
+            });
+        }
+
+        // Done
+        return {
+            token: createToken(user.id),
+            user: user
+        };
     }
 }
 

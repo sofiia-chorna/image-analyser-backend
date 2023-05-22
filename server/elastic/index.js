@@ -14,5 +14,5 @@ const indexes = new Set([
  */
 export const elastic = new Elastic({
     indexes: indexes,
-    recreateIndexes: true
+    recreateIndexes: false
 });

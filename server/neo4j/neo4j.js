@@ -41,6 +41,8 @@ export class Neo4j {
      */
     async init() {
         try {
+            console.log('Try starting neo4j');
+
             // Init neo4j driver
             this.driver = neo4j.driver(this.URI, this.auth);
 

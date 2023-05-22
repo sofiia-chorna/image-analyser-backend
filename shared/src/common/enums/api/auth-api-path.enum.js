@@ -1,4 +1,6 @@
 export const AuthApiPath = {
   ROOT: '/',
-  GOOGLE: '/google'
+  GOOGLE: '/google',
+  REGISTER: '/register',
+  LOGIN: '/login'
 };

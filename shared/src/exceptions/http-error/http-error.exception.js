@@ -7,6 +7,6 @@ export class HttpError extends Error {
   } = {}) {
     super(message);
     this.status = status;
-    this.message = ExceptionName.HTTP_ERROR;
+    this.message = message;
   }
 }

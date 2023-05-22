@@ -56,7 +56,7 @@ export class Abstract {
    */
   async getByField(field, value) {
     const label = this.getLabel();
-    const query = `MATCH (n:${label}) WHERE ${field} = $value RETURN n`;
+    const query = `MATCH (n:${label}) WHERE n.${field} = $value RETURN n`;
     const records = await this.neo4j.read(query, { value: value });
     return records ? records[0] : null;
   }
