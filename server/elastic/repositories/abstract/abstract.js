@@ -25,7 +25,7 @@ export class Abstract {
     /**
      * @param {!QueryBuilder} query
      * @param {{size: number}=} params
-     * @return {!Array<!Object>}
+     * @return {!Promise<!Array<!Object>>}
      */
     async search(query, params) {
         try {
