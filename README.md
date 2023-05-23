@@ -3,7 +3,10 @@
 Server:
 - Neo4j module (OK)
 - Elastic Search module (OK)
-- API (WIP)
+- API (OK)
+- Sonarqube (OK)
+- CI/CD (OK)
+- Tests (TODO)
 
 Client:
 - API (TODO)
