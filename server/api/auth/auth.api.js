@@ -48,6 +48,28 @@ const initAuth = (fastify, opts, done) => {
         },
     });
 
+    // GITHUB LINK
+    fastify.route({
+        method: HttpMethod.GET,
+        url: AuthApiPath.GITHUB,
+
+        // Handle request
+        [ControllerHook.HANDLER]: async (request) => {
+            return await authService.getLoginGitHubUrl(request.query);
+        },
+    });
+
+    // GITHUB LOGIN
+    fastify.route({
+        method: HttpMethod.POST,
+        url: AuthApiPath.GITHUB,
+
+        // Handle request
+        [ControllerHook.HANDLER]: async (request) => {
+            return await authService.loginGitHub(request.body.code);
+        },
+    });
+
     done();
 };
 

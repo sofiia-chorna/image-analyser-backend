@@ -1,6 +1,6 @@
 import { HttpCode, HttpError, HttpMessage } from '../../common/common.js';
 import { user as userRepository } from '../../data/repositories/repositories.js';
-import { googleProvider } from '../../providers/google/google.provider.js';
+import { googleProvider, githubProvider } from '../../providers/providers.js';
 import { createToken, cryptCompare, encrypt } from '../../helpers/helpers.js';
 
 /**
@@ -13,7 +13,7 @@ class Auth {
      */
     constructor(params) {
         // Get repositories from params
-        const { userRepository, googleProvider } = params;
+        const { userRepository, googleProvider, githubProvider } = params;
 
         /**
          * @private
@@ -26,6 +26,12 @@ class Auth {
          * @type {function(*)}
          */
         this._googleProvider = googleProvider;
+
+        /**
+         * @private
+         * @type {function(*)}
+         */
+        this._githubProvider = githubProvider;
     }
 
     /**
@@ -43,6 +49,33 @@ class Auth {
     async loginGoogle(code) {
         // Obtains user information from the authorization code
         const oauthUserData = await this._googleProvider.loginGoogle(code);
+
+        // If user already exists -> return existing one
+        const user = await this._userRepository.getUserByField('email', oauthUserData.email);
+        if (user) {
+            return user;
+        }
+
+        // New user -> save to the db
+        return await this._userRepository.insertUser(oauthUserData);
+    }
+
+    /**
+     * Generates the login URL for GitHub Sign-In
+     * @returns {string} The GitHub Sign-In URL
+     */
+    getLoginGitHubUrl() {
+        return this._githubProvider.getLoginGitHubUrl();
+    }
+
+    /**
+     * Obtains user information from the authorization code
+     * @param {string} code - The authorization code obtained after the user logs in with GitHub
+     * @returns {!Promise<Object>} The user data object
+     */
+    async loginGitHub(code) {
+        // Obtains user information from the authorization code
+        const oauthUserData = await this._githubProvider.loginGitHub(code);
 
         // If user already exists -> return existing one
         const user = await this._userRepository.getUserByField('email', oauthUserData.email);
@@ -116,4 +149,5 @@ class Auth {
 export const auth = new Auth({
     userRepository: userRepository,
     googleProvider: googleProvider,
+    githubProvider: githubProvider,
 });
