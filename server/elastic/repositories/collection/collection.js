@@ -20,7 +20,7 @@ export class Collection extends Abstract {
             const { name, createdAt, tags, author, description } = params;
 
             // Split date input to min and max
-            const { min: minDate, max: maxDate } = getAsJSON(createdAt);
+            const { min: minDate, max: maxDate } = getAsJSON(createdAt, {});
 
             // Create a new query
             const query = new QueryBuilder()
@@ -34,11 +34,11 @@ export class Collection extends Abstract {
                 // Search in author field with match
                 .match('author', author)
 
-                // Search in description field with match
-                .match('description', description)
+                // Search in description field with fuzzy
+                .fuzzy('description', description)
 
-                // Search in tags array field with match
-                .match('tags', tags);
+                // Search in tags array field with terms
+                .terms('tags', getAsJSON(tags));
 
             // Call elastic search
             return await this.search(query);

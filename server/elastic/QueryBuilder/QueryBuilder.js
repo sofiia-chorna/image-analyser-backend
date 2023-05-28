@@ -99,4 +99,40 @@ export class QueryBuilder {
         }
         return this;
     }
+
+    /**
+     * @param {string} field
+     * @param {!Array<string>} values
+     * @return {!QueryBuilder}
+     */
+    terms(field, values) {
+        if (this.checkInput(field, values)) {
+            this.bool.must.push({
+                terms: {
+                    [`doc.${field}`]: values
+                }
+            });
+        }
+        return this;
+    }
+
+    /**
+     * @param {string} field
+     * @param {string} value
+     * @param {number=} fuzziness
+     * @return {!QueryBuilder}
+     */
+    fuzzy(field, value, fuzziness = 1) {
+        if (this.checkInput(field, value)) {
+            this.bool.must.push({
+                fuzzy: {
+                    [`doc.${field}`]: {
+                        value: value,
+                        fuzziness: fuzziness
+                    },
+                }
+            });
+        }
+        return this;
+    }
 }

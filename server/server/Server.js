@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
+import qs from 'qs';
 import { ENV, ExitCode } from '../common/common.js';
 import { initApi } from '../api/api.js';
 
@@ -83,7 +84,8 @@ export class Server {
                         ignore: 'pid,req.hostname,req.remotePort'
                     }
                 },
-            }
+            },
+            querystringParser: str => qs.parse(str)
         });
         this.server.addContentTypeParser('*', {'parseAs': 'buffer'}, (_request, body, done) => {
             done(null, body);
