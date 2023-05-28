@@ -6,7 +6,7 @@ Server:
 - API (OK)
 - Auth
   - Google (OK)
-  - Github (TODO)
+  - Github (OK)
 - Sonarqube (OK)
 - CI/CD (OK)
 - Tests (TODO)
