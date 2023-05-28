@@ -30,8 +30,8 @@ class Collection {
    * @param {!Object} filter
    * @return {!Array<!Object>}
    */
-  getAll(filter) {
-    return this._elasticCollectionRepository.searchCollections(filter);
+  async getAll(filter) {
+    return await this._elasticCollectionRepository.searchCollections(filter);
   }
 
   /**

@@ -1,9 +1,10 @@
 import { Client } from '@elastic/elasticsearch';
 import { ENV } from '../common/common.js';
+import { getDateLog } from '../helpers/helpers.js';
 
 export class Elastic {
     /**
-     * @param {{indexes: Set<string>=, recreateIndexes: boolean}} params
+     * @param {{indexes: Set<string>=, recreateIndexes: boolean, debug: boolean}} params
      * @return {!Elastic}
      */
     constructor(params = {}) {
@@ -34,6 +35,13 @@ export class Elastic {
          * @type {boolean}
          */
         this.recreateIndexes = !!params.recreateIndexes;
+
+        /**
+         * @private
+         * @constant
+         * @type {boolean}
+         */
+        this.debug = !!params.debug;
     }
 
     /**
@@ -123,11 +131,19 @@ export class Elastic {
      * @return {!Promise<Array<Object>>}
      */
     async search(index, query, params = {}) {
+        // Log if debug enabled
+        if (this.debug) {
+            this.log(index, query, params);
+        }
+
+        // Run query
         const { hits } = await this.client.search({
             index: index,
             query: query ?? { match_all: {} },
             size: params.size
         });
+
+        // Done
         return hits.hits;
     }
 
@@ -231,6 +247,16 @@ export class Elastic {
         }
         console.log(`Index '${index}' deleted:`, exists);
         await this.client.indices.delete({ index: index });
+    }
+
+    /**
+     * @param {string} index
+     * @param {Object} query
+     * @param {Object} params
+     */
+    log(index, query, params) {
+        const date = getDateLog();
+        console.log(`[${date}] index: ${index};\nquery: ${JSON.stringify(query)};\nparams: ${JSON.stringify(params)}`);
     }
 }
 

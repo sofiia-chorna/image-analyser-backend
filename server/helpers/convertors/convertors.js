@@ -1,15 +1,16 @@
 /**
  * @param {string | Object} data
+ * @param {string | Object=} defaultValue
  * @return {Object}
  */
-export function getAsJSON(data) {
+export function getAsJSON(data, defaultValue = null) {
     try {
         if (data === undefined) {
-            return {};
+            return defaultValue;
         }
         return (typeof data === 'string') ? JSON.parse(data) : data;
     } catch (_) {
-        return {};
+        return defaultValue;
     }
 }
 
