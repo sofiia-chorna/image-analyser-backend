@@ -1,5 +1,7 @@
 # Image Analyser Project
 
+![Backend Structure](./doc/server-structure.png)
+
 Server:
 - Neo4j module (OK)
 - Elastic Search module (OK)
