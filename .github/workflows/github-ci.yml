@@ -46,8 +46,8 @@ jobs:
     steps:
       - name: Set up Git
         run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "youremail@example.com"
+          git config --global user.name "sofiia-chorna"
+          git config --global user.email "chernaya.sofiia@gmail.com"
           git checkout main
 
       - name: Get Latest Version
