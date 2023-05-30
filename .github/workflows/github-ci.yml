@@ -37,3 +37,34 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  create-new-version:
+    name: Create New Version
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Set up Git
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "youremail@example.com"
+          git checkout main
+
+      - name: Get Latest Version
+        id: get_version
+        run: echo "::set-output name=version::$(git describe --abbrev=0 --tags)"
+
+      - name: Increment Version
+        id: increment_version
+        run: echo "::set-output name=version::$(echo "${{ steps.get_version.outputs.version }}" | awk -F. -v OFS=. '{$NF++;print $0}')"
+
+      - name: Tag Commit
+        run: |
+          git tag ${{ steps.increment_version.outputs.version }}
+          git push --tags
+
+      - name: Update Version in Files
+        run: |
+          sed -i "s/VERSION=.*/VERSION=${{ steps.increment_version.outputs.version }}/" version.txt
+          git commit -am "Update version to ${{ steps.increment_version.outputs.version }}"
+          git push
