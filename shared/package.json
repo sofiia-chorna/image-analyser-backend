@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "dayjs": "1.11.2",
+    "dayjs": "1.11.8",
     "joi": "17.9.2"
   }
 }
