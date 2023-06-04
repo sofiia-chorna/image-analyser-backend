@@ -199,4 +199,5 @@ class ImageRunner:
         # Adjust bboxes to image.
         boxes = rotate_bbox(boxes, 270, (362, 562))
         display_instances(self.image, boxes, masks, class_ids, class_names, scores=scores, confidence=self.threshold)
-        return 'result.png'
+        return 'result.png', class_ids, class_names, scores
+

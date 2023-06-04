@@ -5,6 +5,8 @@ import cv2
 import streamlit as st
 from PIL import Image
 import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
 
 from processor.config import config
 from processor.image_processor import ImageRunner
@@ -58,16 +60,59 @@ if __name__ == '__main__':
         m = cv2.resize(m, (362, 562), interpolation=cv2.INTER_AREA)
 
         with st.spinner('Processing the image...'):
-            result_file = ImageRunner(model, m, threshold).process_image()
+            result_file, result_class_ids, result_class_names, result_scores = ImageRunner(model, m, threshold).process_image()
 
-        st.title(f"Here is the result of segmentation:")
+        st.header(f"Here is the result of segmentation:")
         img = Image.open(result_file)
         resized_image = img.resize((336, 562))
         st.image(resized_image, caption='Clothes Segmentation')
         with open(result_file, "rb") as file:
             btn = st.download_button(
-                label="Download result",
+                label="Download result image",
                 data=file,
                 file_name="segmentation_result.png",
                 mime="image/png"
             )
+
+        st.subheader("Analyses scores")
+
+        # Convert scores to percentages
+        result_scores_percent = [f'{score * 100:.2f}%' for score in result_scores]
+
+        # Create a list of tuples combining the data
+        data = list(zip(result_class_names.values(), result_scores_percent))
+
+        # Create a DataFrame from the list of tuples
+        df = pd.DataFrame(data, columns=['Class Name', 'Score'])
+        st.dataframe(df, use_container_width=True)
+
+        # Create a bar chart using Plotly
+        fig = go.Figure(data=go.Bar(x=list(result_class_names.values()), y=result_scores))
+
+        # Customize the chart layout
+        fig.update_layout(
+            xaxis_title="Class",
+            yaxis_title="Score",
+        )
+
+        st.subheader("Chart view")
+
+        # Display the chart using Streamlit
+        st.plotly_chart(fig)
+
+
+        # Create a dictionary combining the data
+        data = {
+            "tags": [
+                {
+                    "class_name": result_class_names[class_id],
+                    "confidence": score
+                }
+                for class_id, score in zip(result_class_ids, result_scores)
+            ]
+        }
+
+        st.subheader("JSON view")
+
+        # Display the data as JSON using Streamlit
+        st.json(data)
