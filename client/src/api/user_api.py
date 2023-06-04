@@ -24,5 +24,11 @@ class UserAPI:
     def get_user_collections(self, user_id):
         return self.backend_api.get_request(f'/users/{user_id}/collections')
 
+    def add_collection(self, user_id, collection_id):
+        return self.backend_api.post_request(f'/users/{user_id}/collections', data={'destination': collection_id})
+
+    def add_analyses(self, user_id, analyse_id):
+        return self.backend_api.post_request(f'/users/{user_id}/analyses', data={'destination': analyse_id})
+
 
 userApi = UserAPI(backend_api)

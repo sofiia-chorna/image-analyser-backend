@@ -12,6 +12,7 @@ from processor.config import config
 from processor.image_processor import process_image
 from services.user_service import userService
 from services.auth_service import authService
+from ui.export_result.export_result import export_data_component
 
 
 def format_collection(collection):
@@ -35,7 +36,7 @@ def load_s3_file_structure(path: str = 'all_image_files.json') -> dict:
 @st.cache_data()
 def get_user_collections():
     user_info = authService.get_user()
-    return userService.get_user_collections(8)
+    return userService.get_user_collections(user_info["id"])
 
 
 if __name__ == '__main__':
@@ -58,6 +59,8 @@ if __name__ == '__main__':
         st.session_state.result_class_names = None
     if 'result_scores' not in st.session_state:
         st.session_state.result_scores = None
+    if 'json_data' not in st.session_state:
+        st.session_state.json_data = None
 
     types_of_clothes = sorted(list(all_image_files['test'].keys()))
     types_of_clothes = [clothes.title() for clothes in types_of_clothes]
@@ -135,7 +138,9 @@ if __name__ == '__main__':
                     for class_id, score in zip(st.session_state.result_class_ids, st.session_state.result_scores)
                 ]
                 tags_json = json.dumps(tags)
-                st.button(label="Save to collection", type="primary", on_click=handle_save, args=(option, image_base64, tags_json))
+                disabled = len(collections) == 0
+                st.button(label="Save to collection", disabled=disabled, type="primary", on_click=handle_save,
+                          args=(option, image_base64, tags_json))
 
             st.subheader("Analyses scores")
 
@@ -171,3 +176,4 @@ if __name__ == '__main__':
                 ]
             }
             st.json(data)
+            export_data_component(data)

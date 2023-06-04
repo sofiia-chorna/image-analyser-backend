@@ -49,9 +49,9 @@ class Collection {
   async insert(collection) {
     // Create in the db
    const { id } = await this._collectionRepository.insertCollection(collection);
-
+   return id
     // Create in elastic
-    return await this._elasticCollectionRepository.upsertCollection(id, collection);
+    // return await this._elasticCollectionRepository.upsertCollection(id, collection);
   }
 
   /**
