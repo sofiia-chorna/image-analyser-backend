@@ -1,4 +1,4 @@
-from api import APIClient
+from api.api import backend_api
 
 
 class UserAPI:
@@ -21,7 +21,8 @@ class UserAPI:
         response = self.backend_api.delete(f'/users/{user_id}')
         return response.json()
 
+    def get_user_collections(self, user_id):
+        return self.backend_api.get_request(f'/users/{user_id}/collections')
 
-# Example usage
-backend_api = APIClient("http://localhost:8000/api")  # Replace with your backend API base URL
-api = UserAPI(backend_api)
+
+userApi = UserAPI(backend_api)

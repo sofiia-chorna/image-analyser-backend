@@ -1,7 +1,7 @@
 # from utils import display_instances, rotate_bbox
 from config.config import config
 from torchvision.transforms import functional as F
-
+import streamlit as st
 import numpy as np
 import random
 import colorsys
@@ -176,28 +176,22 @@ def rotate_bbox(bbox, angle, size):
     return rotated_bbox
 
 
-class ImageRunner:
-    def __init__(self, model, img, threshold=70):
-        self.image = img
-        self.model = model
-        self.threshold = threshold / 100
+@st.cache_data
+def process_image(_model, image, threshold=70):
+    """
+    Classifies the shape of cloth
+    """
+    img_tensor = F.to_tensor(image)
+    result = _model([img_tensor.to(config['DEVICE'])])[0]
+    confidence = threshold / 100
 
-    def process_image(self):
-        """
-         Classifies the shape of cloth
-         """
-        img_tensor = F.to_tensor(self.image)
-        result = self.model([img_tensor.to(config['DEVICE'])])[0]
+    masks = result['masks'].squeeze().permute(1, 2, 0).cpu().numpy().round()
+    boxes = result['boxes'].cpu().numpy()
+    scores = result['scores'].cpu().numpy()
+    class_ids = result['labels'].cpu().numpy()
+    class_names = {i: config['labels'][i - 1] for i in class_ids}
 
-        masks = result['masks'].squeeze().permute(1, 2, 0).cpu().numpy().round()
-        boxes = result['boxes'].cpu().numpy()
-        scores = result['scores'].cpu().numpy()
-        class_ids = result['labels'].cpu().numpy()
-        class_names = {i: config['labels'][i - 1] for i in class_ids}
-        print('result', scores, class_ids, class_names)
-
-        # Adjust bboxes to image.
-        boxes = rotate_bbox(boxes, 270, (362, 562))
-        display_instances(self.image, boxes, masks, class_ids, class_names, scores=scores, confidence=self.threshold)
-        return 'result.png', class_ids, class_names, scores
-
+    # Adjust bboxes to image
+    boxes = rotate_bbox(boxes, 270, (362, 562))
+    display_instances(image, boxes, masks, class_ids, class_names, scores=scores, confidence=confidence)
+    return 'result.png', class_ids, class_names, scores
