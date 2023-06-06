@@ -78,7 +78,7 @@ class Auth {
         const oauthUserData = await this._githubProvider.loginGitHub(code);
 
         // If user already exists -> return existing one
-        const user = await this._userRepository.getUserByField('email', oauthUserData.email);
+        const user = await this._userRepository.getUserByField('login', oauthUserData.login);
         if (user) {
             return user;
         }
