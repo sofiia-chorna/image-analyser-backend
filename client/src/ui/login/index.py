@@ -92,7 +92,12 @@ def login():
                         webbrowser.open(authService.get_github_login_url())
 
             with tab2:
-                if st.button("Register"):
+                username = st.text_input("Username", help="Enter a unique username")
+                fullname = st.text_input("Fullname")
+                password = st.text_input("Enter Password", type="password")
+                password2 = st.text_input("Repeat Password", type="password")
+
+                if st.button("Register",  type="primary", use_container_width=True):
                     # Handle registration logic here
                     st.write("Register button clicked")
 

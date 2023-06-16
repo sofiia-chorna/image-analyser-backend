@@ -19,5 +19,27 @@ if st.button("Create"):
     create_collection(name, description, tags_list)
     st.success("Collection created successfully!")
 
+st.divider()
+
 # Form for collection search
 st.subheader("Search Collection")
+
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    search_name = st.text_input("Collection name", help="Support wildcard")
+
+with col2:
+    search_desc = st.text_input("Description", help="Support rexeg")
+
+with col3:
+    search_time_from = st.date_input("Created From")
+
+with col4:
+    search_time_to = st.date_input("Created To")
+
+
+# with col21:
+search_tags = st.multiselect("Tags", options=["Autumn", "Test Collection", "Trends 2023"])
+
+# with col22:
+st.button("Search", type="primary")

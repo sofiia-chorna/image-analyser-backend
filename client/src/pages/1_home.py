@@ -36,7 +36,8 @@ def load_s3_file_structure(path: str = 'all_image_files.json') -> dict:
 @st.cache_data()
 def get_user_collections():
     user_info = authService.get_user()
-    return userService.get_user_collections(user_info["id"])
+    return userService.get_user_collections(8)
+    # return userService.get_user_collections(user_info["id"])
 
 
 if __name__ == '__main__':
@@ -116,7 +117,7 @@ if __name__ == '__main__':
         image_base64 = base64.b64encode(image_buffer.getvalue()).decode("utf-8")
 
         # Compress the image
-        with open(result_file, "rb") as file:
+        with open(st.session_state.result_file, "rb") as file:
             col1, col2 = st.columns(2)
             with col1:
                 st.download_button(
@@ -126,7 +127,8 @@ if __name__ == '__main__':
                     mime="image/png"
                 )
             with col2:
-                collections = get_user_collections()
+                # collections = get_user_collections()
+                collections = [{"name": "Autumn"}, {"name": "Finland"}]
                 collection_names = [collection['name'] for collection in collections]
                 option = st.selectbox("Choose the collection to save", options=collections,
                                       format_func=format_collection)
